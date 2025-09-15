@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Tasks Details + Kanban — Tailwind</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            line:'#ECECF2',
+            brand:'#6C63FF',
+            brand2:'#C6C2FF',
+            chip:'#eef0ff',
+            chipTxt:'#5a5eea'
+          },
+          boxShadow:{ soft:'0 10px 30px rgba(18,23,50,.06)' }
+        }
+      }
+    }
+  </script>
+  <style>
+    body{font-family:ui-sans-serif,system-ui,-apple-system,Inter,Segoe UI,Roboto,Arial}
+    .pt-safe{padding-top:env(safe-area-inset-top)}
+    .pb-safe{padding-bottom:env(safe-area-inset-bottom)}
+  </style>
+</head>
+<body class="bg-[#F6F7FB]">
+
+  <!-- DESKTOP: Kanban board (shown lg and up) -->
+  <div class="hidden lg:grid grid-cols-[78px_300px_1fr] gap-4 p-4 min-h-dvh">
+    <!-- Narrow icon sidebar -->
+    <aside class="flex flex-col items-center gap-5 bg-white border border-line rounded-2xl shadow-soft py-4">
+      <div class="w-10 h-10 rounded-xl grid place-items-center text-white font-bold" style="background:linear-gradient(135deg,#6C63FF,#C6C2FF)">C</div>
+      <button class="w-10 h-10 rounded-lg border border-line">🏠</button>
+      <button class="w-10 h-10 rounded-lg border border-line">📦</button>
+      <button class="w-10 h-10 rounded-lg border border-line bg-[#eef0ff] text-[#5a5eea]">🗂</button>
+      <button class="w-10 h-10 rounded-lg border border-line">👤</button>
+      <button class="w-10 h-10 rounded-lg border border-line">✉️</button>
+      <div class="mt-auto">
+        <img class="w-8 h-8 rounded-full" src="https://i.pravatar.cc/40?img=11" alt="">
+      </div>
+    </aside>
+
+    <!-- Left insights with chart -->
+    <aside class="bg-white border border-line rounded-2xl shadow-soft p-4">
+      <p class="font-semibold">Tasks overview</p>
+      <p class="text-xs text-slate-500">Overall tasks performance</p>
+
+      <div class="mt-3 space-y-3">
+        <div class="rounded-xl border border-line p-3">
+          <div class="flex items-center justify-between">
+            <div><p class="text-xs text-slate-500">To do</p><p class="text-xl font-bold">1,345</p></div>
+            <p class="text-sm text-slate-500">75%</p>
+          </div>
+          <div class="mt-2 h-1.5 rounded-full bg-slate-200"><div class="h-full w-3/4 rounded-full bg-emerald-400"></div></div>
+        </div>
+        <div class="rounded-xl border border-line p-3">
+          <div class="flex items-center justify-between">
+            <div><p class="text-xs text-slate-500">Pending</p><p class="text-xl font-bold">840</p></div>
+            <p class="text-sm text-slate-500">30%</p>
+          </div>
+          <div class="mt-2 h-1.5 rounded-full bg-slate-200"><div class="h-full w-1/3 rounded-full bg-amber-400"></div></div>
+        </div>
+        <div class="rounded-xl border border-line p-3">
+          <div class="flex items-center justify-between">
+            <div><p class="text-xs text-slate-500">Done</p><p class="text-xl font-bold">1,084</p></div>
+            <p class="text-sm text-slate-500">80%</p>
+          </div>
+          <div class="mt-2 h-1.5 rounded-full bg-slate-200"><div class="h-full w-4/5 rounded-full bg-indigo-500"></div></div>
+        </div>
+      </div>
+
+      <div class="mt-5">
+        <p class="font-semibold">Conversion history</p>
+        <p class="text-xs text-slate-500">Week to week performance</p>
+        <div class="mt-3 rounded-xl border border-line p-2">
+          <div class="relative h-32"><canvas id="leftAreaChart"></canvas></div>
+        </div>
+        <div class="grid grid-cols-2 gap-3 mt-3">
+          <div class="rounded-xl border border-line p-3 text-center"><p class="font-semibold">$342,000</p><p class="text-xs text-slate-500">Total sales</p></div>
+          <div class="rounded-xl border border-line p-3 text-center"><p class="font-semibold">$200,000</p><p class="text-xs text-slate-500">Spendings</p></div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Kanban main (three columns) -->
+    <main class="min-w-0">
+      <header class="bg-white border border-line rounded-2xl shadow-soft h-14 px-4 flex items-center justify-between">
+        <div class="flex items-center gap-3"><button class="w-10 h-10 rounded-lg border border-line grid place-items-center">≡</button><p class="font-semibold">Kanban Desk</p></div>
+        <div class="flex items-center gap-2"><button class="w-10 h-10 rounded-lg border border-line grid place-items-center">🔍</button><button class="w-10 h-10 rounded-lg border border-line grid place-items-center">⚙️</button></div>
+      </header>
+
+      <section class="mt-4 bg-white border border-line rounded-2xl shadow-soft p-4">
+        <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <!-- Column template -->
+          <div class="rounded-2xl border border-line p-3">
+            <div class="flex items-center justify-between"><p class="font-semibold text-slate-800">To do</p><button class="text-xs px-2 py-1 rounded-md border border-line bg-white">ADD NEW TASK</button></div>
+            <div class="mt-3 space-y-3">
+              <!-- Card -->
+              <article class="rounded-xl border border-line bg-white p-3">
+                <div class="flex items-start justify-between"><div><p class="font-semibold">Design new UI presentation</p><p class="text-xs text-slate-500">Dribbble Presentation</p></div><button class="w-8 h-8 rounded-lg border border-line grid place-items-center">⋮</button></div>
+                <div class="mt-3">
+                  <div class="text-xs text-slate-500">Progress</div>
+                  <div class="mt-1 h-1.5 rounded-full bg-slate-200"><div class="h-full w-1/2 rounded-full bg-amber-400"></div></div>
+                </div>
+                <div class="mt-3 flex items-center gap-2 text-xs text-slate-500"><span class="px-2 py-1 rounded-md bg-[#f5f6ff] border border-line">24 Aug 2019</span><span>📎 4</span><span>💬 1</span></div>
+              </article>
+
+              <article class="rounded-xl border border-line bg-white p-3">
+                <div class="flex items-start justify-between"><div><p class="font-semibold">Add more UI/UX mockups</p><p class="text-xs text-slate-500">Pinterest Promotion</p></div><button class="w-8 h-8 rounded-lg border border-line grid place-items-center">⋮</button></div>
+                <div class="mt-3"><div class="text-xs text-slate-500">Progress</div><div class="mt-1 h-1.5 rounded-full bg-slate-200"><div class="h-full w-2/3 rounded-full bg-amber-400"></div></div></div>
+                <div class="mt-3 flex items-center gap-2 text-xs text-slate-500"><span class="px-2 py-1 rounded-md bg-[#fff5f5] border border-[#ffdede] text-[#b85454]">14 Mar 2019</span><div class="flex -space-x-2"><img class="w-7 h-7 rounded-xl border border-white" src="https://i.pravatar.cc/32?img=14" alt=""><img class="w-7 h-7 rounded-xl border border-white" src="https://i.pravatar.cc/32?img=22" alt=""></div><span class="ml-auto px-2 py-1 rounded-md border border-line">+5</span></div>
+              </article>
+
+              <article class="rounded-xl border border-line bg-white p-3">
+                <div class="flex items-start justify-between"><div><p class="font-semibold">Design few mobile screens</p><p class="text-xs text-slate-500">Dropbox Mobile App</p></div><button class="w-8 h-8 rounded-lg border border-line grid place-items-center">⋮</button></div>
+                <div class="mt-3"><div class="text-xs text-slate-500">Progress</div><div class="mt-1 h-1.5 rounded-full bg-slate-200"><div class="h-full w-1/5 rounded-full bg-amber-400"></div></div></div>
+                <div class="mt-3 flex items-center gap-2 text-xs text-slate-500"><span class="px-2 py-1 rounded-md bg-[#fffaf0] border border-[#ffe9b8] text-[#b38b1a]">14 Jan 2019</span><span class="ml-auto px-2 py-1 rounded-md border border-line">+3</span></div>
+              </article>
+            </div>
+          </div>
+
+          <!-- In progress -->
+          <div class="rounded-2xl border border-line p-3">
+            <div class="flex items-center justify-between"><p class="font-semibold text-slate-800">In progress</p><button class="text-xs px-2 py-1 rounded-md border border-line bg-white">ADD NEW TASK</button></div>
+            <div class="mt-3 space-y-3">
+              <article class="rounded-xl border border-line bg-white p-3">
+                <div class="flex items-start justify-between"><div><p class="font-semibold">Create a new wireframe</p><p class="text-xs text-slate-500">Website Development</p></div><button class="w-8 h-8 rounded-lg border border-line grid place-items-center">⋮</button></div>
+                <div class="mt-3"><div class="text-xs text-slate-500">Progress</div><div class="mt-1 h-1.5 rounded-full bg-slate-200"><div class="h-full w-1/2 rounded-full bg-amber-400"></div></div></div>
+                <div class="mt-3 flex items-center gap-2 text-xs text-slate-500"><span class="px-2 py-1 rounded-md bg-[#f5f6ff] border border-line">27 May 2019</span><div class="flex -space-x-2"><img class="w-7 h-7 rounded-xl border border-white" src="https://i.pravatar.cc/32?img=7" alt=""><img class="w-7 h-7 rounded-xl border border-white" src="https://i.pravatar.cc/32?img=12" alt=""></div><span class="ml-auto px-2 py-1 rounded-md border border-line">+5</span></div>
+              </article>
+
+              <article class="rounded-xl border border-line bg-white p-3">
+                <div class="flex items-start justify-between"><div><p class="font-semibold">Create a twit and promote</p><p class="text-xs text-slate-500">Twitter Marketing</p></div><button class="w-8 h-8 rounded-lg border border-line grid place-items-center">⋮</button></div>
+                <div class="mt-3"><div class="text-xs text-slate-500">Progress</div><div class="mt-1 h-1.5 rounded-full bg-slate-200"><div class="h-full w-1/6 rounded-full bg-rose-400"></div></div></div>
+                <div class="mt-3 flex items-center gap-2 text-xs text-slate-500"><span class="px-2 py-1 rounded-md bg-[#f5f6ff] border border-line">04 Aug 2019</span><span class="ml-auto">💬 4</span><span>👁 1</span></div>
+              </article>
+            </div>
+          </div>
+
+          <!-- Done -->
+          <div class="rounded-2xl border border-line p-3">
+            <div class="flex items-center justify-between"><p class="font-semibold text-slate-800">Done</p><button class="text-xs px-2 py-1 rounded-md border border-line bg-white">ADD NEW TASK</button></div>
+            <div class="mt-3 space-y-3">
+              <article class="rounded-xl border border-line bg-white p-3">
+                <div class="flex items-start justify-between"><div><p class="font-semibold">Add product to the market</p><p class="text-xs text-slate-500">Envato App Design</p></div><button class="w-8 h-8 rounded-lg border border-line grid place-items-center">⋮</button></div>
+                <div class="mt-3"><div class="text-xs text-slate-500">Progress</div><div class="mt-1 h-1.5 rounded-full bg-slate-200"><div class="h-full w-full rounded-full bg-emerald-500"></div></div></div>
+                <div class="mt-3 flex items-center gap-2 text-xs text-slate-500"><span class="px-2 py-1 rounded-md bg-[#f5f6ff] border border-line">21 Aug 2019</span><div class="flex -space-x-2"><img class="w-7 h-7 rounded-xl border border-white" src="https://i.pravatar.cc/32?img=15" alt=""><img class="w-7 h-7 rounded-xl border border-white" src="https://i.pravatar.cc/32?img=23" alt=""></div><span class="ml-auto px-2 py-1 rounded-md border border-line">+4</span></div>
+              </article>
+
+              <article class="rounded-xl border border-line bg-white p-3">
+                <div class="flex items-start justify-between"><div><p class="font-semibold">Run and manage campaign</p><p class="text-xs text-slate-500">Adwords Campaign</p></div><button class="w-8 h-8 rounded-lg border border-line grid place-items-center">⋮</button></div>
+                <div class="mt-3"><div class="text-xs text-slate-500">Progress</div><div class="mt-1 h-1.5 rounded-full bg-slate-200"><div class="h-full w-full rounded-full bg-emerald-500"></div></div></div>
+                <div class="mt-3 flex items-center gap-2 text-xs text-slate-500"><span class="px-2 py-1 rounded-md bg-[#fff0f0] border border-[#ffdede] text-[#b85454]">27 Nov 2019</span><span class="ml-auto">📎 4</span><span>💬 1</span></div>
+              </article>
+
+              <article class="rounded-xl border border-line bg-white p-3">
+                <div class="flex items-start justify-between"><div><p class="font-semibold">Launch product promotion</p><p class="text-xs text-slate-500">Kickstarter Campaign</p></div><button class="w-8 h-8 rounded-lg border border-line grid place-items-center">⋮</button></div>
+                <div class="mt-3"><div class="text-xs text-slate-500">Progress</div><div class="mt-1 h-1.5 rounded-full bg-slate-200"><div class="h-full w-[88%] rounded-full bg-emerald-500"></div></div></div>
+                <div class="mt-3 flex items-center gap-2 text-xs text-slate-500"><span class="px-2 py-1 rounded-md bg-[#fffaf0] border border-[#ffe9b8] text-[#b38b1a]">07 Sep 2019</span><span class="ml-auto">📎 4</span><span>💬 1</span></div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- MOBILE: Tasks Details page (shown below lg) -->
+  <div class="lg:hidden fixed inset-0 overflow-y-auto bg-[#F6F7FB]">
+    <header class="pt-safe bg-white border-b border-line">
+      <div class="h-14 flex items-center justify-between px-3">
+        <button class="w-10 h-10 rounded-lg border border-line grid place-items-center">‹</button>
+        <p class="font-semibold">Tasks Details</p>
+        <button class="w-10 h-10 rounded-lg border border-line grid place-items-center">⋮</button>
+      </div>
+    </header>
+
+    <main class="px-3 pb-24">
+      <section class="mt-4 bg-white rounded-2xl border border-line p-4 shadow-soft">
+        <div class="flex items-start justify-between">
+          <div>
+            <h2 class="text-[18px] leading-6 font-semibold">Design new dashboard for client</h2>
+            <p class="text-xs text-slate-500">Task created on 07 Jun 2019</p>
+          </div>
+          <button class="w-8 h-8 rounded-lg border border-line grid place-items-center bg-[#eef0ff] text-[#5a5eea]">✔</button>
+        </div>
+      </section>
+
+      <section class="mt-3 bg-white rounded-2xl border border-line shadow-soft">
+        <div class="px-4 py-3 border-b border-line"><p class="text-xs text-slate-500">Assigned to</p></div>
+        <div class="p-3 flex items-center gap-1.5">
+          <img class="w-8 h-8 rounded-xl object-cover" src="https://i.pravatar.cc/64?img=12" alt="">
+          <img class="w-8 h-8 rounded-xl object-cover" src="https://i.pravatar.cc/64?img=22" alt="">
+          <img class="w-8 h-8 rounded-xl object-cover" src="https://i.pravatar.cc/64?img=36" alt="">
+          <button class="w-8 h-8 rounded-xl border border-line grid place-items-center bg-white ml-1">+</button>
+        </div>
+      </section>
+
+      <section class="mt-3 bg-white rounded-2xl border border-line shadow-soft">
+        <div class="px-4 py-3 border-b border-line"><p class="text-xs text-slate-500">Due to</p></div>
+        <div class="p-3 flex items-center gap-2">
+          <button class="px-3 py-2 rounded-lg border border-line bg-white text-sm inline-flex items-center gap-2 shadow-soft">📅 <span>14 Aug 2018</span></button>
+          <span class="px-3 py-2 rounded-lg text-[13px] bg-[#fff6e9] text-[#b48722] border border-[#ffe7b5] shadow-soft">Sketch</span>
+        </div>
+      </section>
+
+      <section class="mt-3 bg-white rounded-2xl border border-line shadow-soft">
+        <div class="px-4 py-3 border-b border-line"><p class="text-xs text-slate-500">Description</p></div>
+        <div class="p-4 text-sm text-slate-700 leading-relaxed">
+          When first getting into the online advertising business, the magical combination that puts a website into the top search engine rankings can catapult reach, leading to outcomes beyond expectations.
+        </div>
+      </section>
+
+      <section class="mt-3 bg-white rounded-2xl border border-line shadow-soft">
+        <div class="px-4 py-3 border-b border-line"><p class="text-xs text-slate-500">Subtasks</p></div>
+        <div class="p-4">
+          <div class="flex items-center justify-between text-sm">
+            <p class="font-medium">Checklist</p>
+            <p class="text-slate-500">5 / 6</p>
+          </div>
+          <div class="mt-2 h-1.5 rounded-full bg-slate-200"><div class="h-full w-[83%] rounded-full bg-emerald-500"></div></div>
+          <div class="mt-4 flex items-center gap-2">
+            <button class="w-5 h-5 rounded-md border border-line bg-[#eef0ff] text-[#5a5eea] grid place-items-center">✔</button>
+            <p class="text-sm">Design new home page</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="h-24"></div>
+    </main>
+
+    <nav class="fixed bottom-0 inset-x-0 bg-white border-t border-line pb-safe">
+      <div class="h-16 flex items-center justify-between px-3">
+        <button class="w-11 h-11 rounded-xl border border-line grid place-items-center">🏠</button>
+        <button class="w-11 h-11 rounded-xl border border-line grid place-items-center">📦</button>
+        <button class="w-11 h-11 rounded-xl border border-line grid place-items-center bg-chip text-chipTxt">🗂</button>
+        <button class="w-11 h-11 rounded-xl border border-line grid place-items-center">📅</button>
+        <button class="w-11 h-11 rounded-xl border border-line grid place-items-center">≡</button>
+      </div>
+    </nav>
+  </div>
+
+  <script>
+    // Responsive area chart for the desktop left card
+    const lctx = document.getElementById('leftAreaChart')?.getContext('2d');
+    if (lctx) {
+      new Chart(lctx, {
+        type: 'line',
+        data: {
+          labels: ['M','T','W','T','F','S','S'],
+          datasets: [{
+            data: [6, 10, 15, 12, 14, 13, 14],
+            borderColor: '#6C63FF',
+            backgroundColor: 'rgba(108,99,255,0.14)',
+            fill: true,
+            tension: .35,
+            pointRadius: 0
+          }]
+        },
+        options: {
+          responsive: true,              /* responsive canvas sizing */ /* matches chart docs */
+          maintainAspectRatio: false,    /* fill the container height */                       /* [10] */
+          scales: {
+            x: { grid: { display:false }, ticks: { display:false } },
+            y: { grid: { color:'#F0F1F6' }, ticks: { display:false }, beginAtZero:true }
+          },
+          plugins: { legend: { display:false }, tooltip: { enabled:true } }
+        }
+      });
+    }
+  </script>
+</body>
+</html>
