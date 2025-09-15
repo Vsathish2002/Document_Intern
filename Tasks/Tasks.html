@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tasks + Conversion Chart</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            line:'#ECECF2',
+            brand:'#6C63FF',
+            brand2:'#C6C2FF',
+            chip:'#eef0ff',
+            chipTxt:'#5a5eea'
+          },
+          boxShadow:{ soft:'0 10px 30px rgba(18,23,50,.06)'}
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: ui-sans-serif, system-ui, -apple-system, "Inter", Segoe UI, Roboto, Arial }
+    input[type="checkbox"].task:checked + span .check {
+      background: linear-gradient(135deg,#6C63FF,#8F89FF);
+      border-color: transparent;
+    }
+    input[type="checkbox"].task:checked + span .check:after {
+      content:"";
+      position:absolute; inset:0;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 11 8 15 16 6"/></svg>') center/12px 12px no-repeat;
+      filter: drop-shadow(0 1px 0 rgba(0,0,0,.05));
+    }
+  </style>
+</head>
+<body class="bg-[#f6f7fb]">
+  <div class="min-h-dvh flex">
+    <!-- Sidebar with conversion chart -->
+    <aside class="hidden xl:flex w-[320px] shrink-0 flex-col gap-4 p-4">
+      <div class="bg-white border border-line rounded-2xl shadow-soft p-4">
+        <p class="font-semibold">Tasks overview</p>
+        <p class="text-xs text-slate-500 mt-0.5">Overall tasks performance</p>
+        <div class="mt-3 space-y-3">
+          <div class="flex items-center justify-between border border-line rounded-xl p-3">
+            <div><p class="text-sm text-slate-500">All tasks</p><p class="text-xl font-bold">298</p></div>
+            <div class="w-10 h-10 grid place-items-center rounded-lg bg-[#f3f5ff]">≡</div>
+          </div>
+          <div class="flex items-center justify-between border border-line rounded-xl p-3">
+            <div><p class="text-sm text-slate-500">Pending</p><p class="text-xl font-bold">84</p></div>
+            <div class="w-10 h-10 grid place-items-center rounded-lg bg-[#fff7e8]">⏳</div>
+          </div>
+          <div class="flex items-center justify-between border border-line rounded-xl p-3">
+            <div><p class="text-sm text-slate-500">Complete</p><p class="text-xl font-bold">214</p></div>
+            <div class="w-10 h-10 grid place-items-center rounded-lg bg-[#fff0f3]">✔</div>
+          </div>
+          <div class="flex items-center justify-between border border-line rounded-xl p-3">
+            <div><p class="text-sm text-slate-500">Archived</p><p class="text-xl font-bold">380</p></div>
+            <div class="w-10 h-10 grid place-items-center rounded-lg bg-[#eef6ff]">📦</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Conversion history with Chart.js -->
+      <div class="bg-white border border-line rounded-2xl shadow-soft p-4">
+        <p class="font-semibold">Conversion history</p>
+        <p class="text-xs text-slate-500">Week to week performance</p>
+        <div class="mt-3 rounded-xl border border-line p-2">
+          <div class="relative h-40">
+            <canvas id="convChart"></canvas>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3 mt-3">
+          <div class="rounded-xl border border-line p-3 text-center">
+            <p class="font-semibold">$342,000</p>
+            <p class="text-xs text-slate-500">Total sales</p>
+          </div>
+          <div class="rounded-xl border border-line p-3 text-center">
+            <p class="font-semibold">$200,000</p>
+            <p class="text-xs text-slate-500">Spendings</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main column with tasks -->
+    <div class="flex-1 flex flex-col">
+      <header class="h-16 bg-white border-b border-line flex items-center justify-between px-3 sm:px-5">
+        <button class="xl:hidden w-10 h-10 grid place-items-center rounded-lg border border-line">☰</button>
+        <h1 class="font-semibold">Tasks</h1>
+        <div class="flex items-center gap-2">
+          <button class="w-10 h-10 grid place-items-center rounded-lg border border-line">🔍</button>
+          <button class="w-10 h-10 grid place-items-center rounded-lg border border-line">⚙️</button>
+        </div>
+      </header>
+
+      <main class="flex-1 p-3 sm:p-5">
+        <div class="max-w-[1100px] mx-auto">
+          <!-- Segmented tabs -->
+          <div class="flex items-center justify-between">
+            <div class="flex gap-2">
+              <button class="px-3 py-2 rounded-lg text-white bg-[linear-gradient(135deg,#6C63FF,#8F89FF)] text-sm font-semibold">All</button>
+              <button class="px-3 py-2 rounded-lg text-slate-600 bg-white border border-line text-sm">Done</button>
+              <button class="px-3 py-2 rounded-lg text-slate-600 bg-white border border-line text-sm">Pending</button>
+            </div>
+            <div class="hidden md:flex items-center gap-3 text-xs text-slate-500">
+              <span>Sort:</span>
+              <button class="px-2 py-1 rounded-md border border-line bg-white">A–Z</button>
+            </div>
+          </div>
+
+          <div class="mt-3 sm:mt-4 space-y-3">
+            <!-- Add-new row -->
+            <div class="bg-white border border-dashed border-line rounded-2xl p-3 sm:p-4">
+              <div class="flex items-center gap-3 text-slate-500">
+                <div class="w-5 h-5 rounded border border-line"></div>
+                <input class="flex-1 outline-none bg-transparent placeholder-slate-400"
+                       placeholder="Type to add a new task …"/>
+              </div>
+            </div>
+
+            <!-- Task rows (subset shown; duplicate as needed) -->
+            <div class="bg-white border border-line rounded-2xl px-3 sm:px-4 py-3">
+              <div class="flex items-center gap-3">
+                <label class="relative">
+                  <input type="checkbox" class="task sr-only" checked>
+                  <span class="inline-flex"><span class="check relative w-[20px] h-[20px] rounded-md border border-line bg-white shadow-sm"></span></span>
+                </label>
+                <p class="flex-1 text-sm sm:text-[15px] font-semibold">Budget and contract</p>
+                <div class="hidden md:flex items-center gap-4 text-xs text-slate-500">
+                  <span>📋 2/9</span><span>📎 7</span><span>💬 3</span><span>👁 9</span>
+                  <span class="px-2 py-1 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100">Done</span>
+                  <img class="w-8 h-8 rounded-xl object-cover" src="https://i.pravatar.cc/64?img=32" alt="">
+                </div>
+                <img class="md:hidden w-8 h-8 rounded-xl object-cover" src="https://i.pravatar.cc/64?img=32" alt="">
+              </div>
+            </div>
+
+            <div class="bg-white border border-line rounded-2xl px-3 sm:px-4 py-3">
+              <div class="flex items-center gap-3">
+                <label class="relative">
+                  <input type="checkbox" class="task sr-only" checked>
+                  <span class="inline-flex"><span class="check relative w-[20px] h-[20px] rounded-md border border-line bg-white shadow-sm"></span></span>
+                </label>
+                <p class="flex-1 text-sm sm:text-[15px] font-semibold">Search for a UI kit</p>
+                <div class="hidden md:flex items-center gap-4 text-xs text-slate-500">
+                  <span>📋 3/5</span><span>📎 2</span><span>💬 2</span><span>👁 2</span>
+                  <span class="px-2 py-1 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100">Done</span>
+                  <img class="w-8 h-8 rounded-xl object-cover" src="https://i.pravatar.cc/64?img=5" alt="">
+                </div>
+                <img class="md:hidden w-8 h-8 rounded-xl object-cover" src="https://i.pravatar.cc/64?img=5" alt="">
+              </div>
+            </div>
+
+            <div class="bg-white border border-line rounded-2xl px-3 sm:px-4 py-3">
+              <div class="flex items-center gap-3">
+                <label class="relative">
+                  <input type="checkbox" class="task sr-only" checked>
+                  <span class="inline-flex"><span class="check relative w-[20px] h-[20px] rounded-md border border-line bg-white shadow-sm"></span></span>
+                </label>
+                <p class="flex-1 text-sm sm:text-[15px] font-semibold">Design new dashboard</p>
+                <div class="hidden md:flex items-center gap-4 text-xs text-slate-500">
+                  <span>📋 3/5</span><span>📎 2</span><span>💬 2</span><span>👁 2</span>
+                  <span class="px-2 py-1 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-100">Done</span>
+                  <img class="w-8 h-8 rounded-xl object-cover" src="https://i.pravatar.cc/64?img=14" alt="">
+                </div>
+                <img class="md:hidden w-8 h-8 rounded-xl object-cover" src="https://i.pravatar.cc/64?img=14" alt="">
+              </div>
+            </div>
+
+            <div class="bg-white border border-line rounded-2xl px-3 sm:px-4 py-3">
+              <div class="flex items-center gap-3">
+                <label class="relative">
+                  <input type="checkbox" class="task sr-only">
+                  <span class="inline-flex"><span class="check relative w-[20px] h-[20px] rounded-md border border-line bg-white shadow-sm"></span></span>
+                </label>
+                <p class="flex-1 text-sm sm:text-[15px]">Design search page</p>
+                <div class="hidden md:flex items-center gap-4 text-xs text-slate-500">
+                  <span>📋 4/6</span><span>📎 8</span><span>💬 6</span><span>👁 6</span>
+                  <span class="px-2 py-1 rounded-full bg-amber-50 text-amber-600 border border-amber-100">Pending</span>
+                  <img class="w-8 h-8 rounded-xl object-cover" src="https://i.pravatar.cc/64?img=22" alt="">
+                </div>
+                <img class="md:hidden w-8 h-8 rounded-xl object-cover" src="https://i.pravatar.cc/64?img=22" alt="">
+              </div>
+            </div>
+          </div>
+
+          <!-- Desktop floating center button -->
+          <div class="hidden md:block mt-8">
+            <div class="w-full grid">
+              <button class="justify-self-center w-11 h-11 rounded-xl border border-line bg-white shadow-soft">⟳</button>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Mobile dock -->
+      <nav class="md:hidden fixed bottom-0 inset-x-0 h-16 bg-white border-t border-line z-40">
+        <div class="h-full px-3 flex items-center justify-between">
+          <button class="w-11 h-11 rounded-xl border border-line grid place-items-center">🏠</button>
+          <button class="w-11 h-11 rounded-xl border border-line grid place-items-center">📦</button>
+          <button class="w-11 h-11 rounded-xl border border-line grid place-items-center bg-chip text-chipTxt">✉️</button>
+          <button class="w-11 h-11 rounded-xl border border-line grid place-items-center">📅</button>
+          <button class="w-11 h-11 rounded-xl border border-line grid place-items-center">≡</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <script>
+    // Chart.js config — minimalist bars to match the reference miniature graph
+    const ctx = document.getElementById('convChart').getContext('2d');
+    const convChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+        datasets: [
+          {
+            label: 'Sales',
+            data: [8, 16, 10, 22, 14, 18, 12],
+            backgroundColor: 'rgba(108,99,255,0.35)',
+            borderRadius: 6,
+            barThickness: 12,
+          },
+          {
+            label: 'Spend',
+            data: [5, 12, 7, 14, 9, 12, 9],
+            backgroundColor: 'rgba(108,99,255,0.20)',
+            borderRadius: 6,
+            barThickness: 12,
+          }
+        ]
+      },
+      options: {
+        responsive: true,               // resize with container
+        maintainAspectRatio: false,     // fill the .h-40 container
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: { display: false }
+          },
+          y: {
+            grid: { color: '#F0F1F6' },
+            ticks: { display: false },
+            beginAtZero: true
+          }
+        },
+        plugins: {
+          legend: { display: false },   // hide legend like the small card
+          tooltip: { enabled: true }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

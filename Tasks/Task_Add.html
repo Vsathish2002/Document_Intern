@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <title>Add New Task — Unified</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            line:'#ECECF2',
+            brand:'#6C63FF',
+            brand2:'#C6C2FF',
+            chip:'#eef0ff',
+            chipTxt:'#5a5eea'
+          },
+          boxShadow:{
+            soft:'0 10px 30px rgba(18,23,50,.06)',
+            card:'0 8px 24px rgba(17,24,39,.06)'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: ui-sans-serif, system-ui, -apple-system, "Inter", Segoe UI, Roboto, Arial }
+    /* iOS safe areas */
+    .pt-safe { padding-top: env(safe-area-inset-top); }
+    .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+    /* Gradient checkbox (for later use) */
+    input[type="checkbox"].task:checked + span .check {
+      background: linear-gradient(135deg,#6C63FF,#8F89FF);
+      border-color: transparent;
+    }
+  </style>
+</head>
+<body class="bg-[#F7F8FC]">
+  <!-- Background app shell (visible on desktop behind dialog) -->
+  <div class="min-h-dvh hidden md:block">
+    <header class="h-16 bg-white/95 backdrop-blur border-b border-line flex items-center justify-between px-6">
+      <div class="flex items-center gap-3">
+        <button class="w-10 h-10 rounded-lg border border-line grid place-items-center">☰</button>
+        <h1 class="font-semibold">Tasks</h1>
+      </div>
+      <div class="flex items-center gap-2">
+        <button class="w-10 h-10 rounded-lg border border-line grid place-items-center">🔍</button>
+        <button class="w-10 h-10 rounded-lg border border-line grid place-items-center">⚙️</button>
+      </div>
+    </header>
+
+    <main class="px-6 py-6">
+      <div class="max-w-7xl mx-auto">
+        <div class="bg-white rounded-2xl border border-line shadow-soft p-6 text-slate-500">
+          Background list placeholder (to show dimmed backdrop).
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Desktop dialog (md and up) -->
+  <div id="dialog" class="fixed inset-0 z-50 hidden md:grid place-items-center bg-black/40 backdrop-blur-[2px] p-4">
+    <div class="w-full max-w-3xl bg-white rounded-2xl border border-line shadow-card overflow-hidden">
+      <!-- Header bar -->
+      <div class="h-14 flex items-center justify-between border-b border-line bg-white px-5">
+        <div class="flex items-center gap-3">
+          <button class="px-2.5 py-1.5 rounded-md border border-line text-xs bg-white">Mark as Complete</button>
+        </div>
+        <button id="closeDesktop" class="w-10 h-10 rounded-lg border border-line grid place-items-center bg-white">⋮</button>
+      </div>
+
+      <div class="px-6 py-5">
+        <div class="flex items-start justify-between">
+          <div>
+            <h2 class="text-lg font-semibold text-slate-900">Design new dashboard for client</h2>
+            <p class="text-xs text-slate-500">Task created on 07 Jun 2019</p>
+          </div>
+          <button class="w-9 h-9 rounded-lg border border-line grid place-items-center bg-white">☐</button>
+        </div>
+
+        <!-- Form -->
+        <form class="mt-5 space-y-5">
+          <!-- Assigned / Due -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div class="rounded-xl border border-line bg-white">
+              <div class="px-4 py-3 border-b border-line">
+                <p class="text-xs text-slate-500">Assigned to</p>
+              </div>
+              <div class="p-3">
+                <button type="button" class="w-9 h-9 rounded-lg border border-line grid place-items-center bg-white">+</button>
+              </div>
+            </div>
+
+            <div class="rounded-xl border border-line bg-white">
+              <div class="px-4 py-3 border-b border-line">
+                <p class="text-xs text-slate-500">Due to</p>
+              </div>
+              <div class="p-3 flex flex-wrap gap-2">
+                <button type="button" class="px-3 py-2 rounded-lg border border-line bg-white text-sm inline-flex items-center gap-2 shadow-sm">
+                  📅 <span>Select date</span>
+                </button>
+                <button type="button" class="px-3 py-2 rounded-lg border border-line bg-white text-sm inline-flex items-center gap-2 shadow-sm">
+                  🏷 <span>Select tag</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="rounded-xl border border-line bg-white">
+            <div class="px-4 py-3 border-b border-line">
+              <p class="text-xs text-slate-500">Description</p>
+            </div>
+            <div class="p-3">
+              <textarea rows="3" class="w-full resize-y rounded-lg border border-line px-3 py-2 outline-none bg-[#fbfbfe] placeholder-slate-400" placeholder="Start typing…"></textarea>
+            </div>
+          </div>
+
+          <!-- Checklist starter -->
+          <div class="rounded-xl border border-line bg-white">
+            <div class="px-4 py-3 border-b border-line">
+              <p class="text-xs text-slate-500">Checklist</p>
+            </div>
+            <div class="p-3 flex items-center gap-3 text-slate-500">
+              <label class="relative">
+                <input type="checkbox" class="task sr-only">
+                <span class="inline-flex"><span class="check relative w-[18px] h-[18px] rounded-md border border-line bg-white shadow-sm"></span></span>
+              </label>
+              <input class="flex-1 bg-transparent outline-none text-sm placeholder-slate-400" placeholder="Type to add more …"/>
+            </div>
+          </div>
+
+          <!-- Attachments -->
+          <div class="rounded-xl border border-line bg-white">
+            <div class="px-4 py-3 border-b border-line">
+              <p class="text-xs text-slate-500">Attachments</p>
+            </div>
+            <div class="p-3">
+              <button type="button" class="inline-flex items-center gap-2 text-slate-700 px-3 py-2 rounded-lg border border-line bg-white shadow-sm">
+                ⬆️ <span>Upload your attachment</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Comment bar -->
+          <div class="rounded-xl border border-line bg-[#fbfbfe] p-3 flex items-center gap-2">
+            <input class="flex-1 bg-white border border-line rounded-xl px-3 py-2 outline-none" placeholder="Add your comment"/>
+            <button class="w-10 h-10 rounded-lg border border-line grid place-items-center bg-white">📎</button>
+            <button class="w-10 h-10 rounded-lg border border-line grid place-items-center bg-white">🖼</button>
+            <button class="px-4 py-2 rounded-xl text-white font-semibold" style="background:linear-gradient(135deg,#6C63FF,#8F89FF)">Send</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile full-page version (smaller than md) -->
+  <main class="md:hidden fixed inset-0 z-40 bg-[#F7F8FC] overflow-y-auto">
+    <!-- Header with safe-area top -->
+    <header class="pt-safe bg-white border-b border-line">
+      <div class="h-14 flex items-center justify-between px-3">
+        <button class="w-10 h-10 rounded-lg border border-line grid place-items-center">‹</button>
+        <p class="font-semibold">Add New Task</p>
+        <button class="w-10 h-10 rounded-lg border border-line grid place-items-center">⋮</button>
+      </div>
+    </header>
+
+    <div class="px-3 pb-24">
+      <!-- Title -->
+      <section class="mt-3 bg-white rounded-2xl border border-line shadow-soft">
+        <div class="p-4">
+          <div class="flex items-start justify-between">
+            <div>
+              <h2 class="text-[18px] leading-6 font-semibold">Type your task</h2>
+              <p class="text-xs text-slate-500 mt-1">Task created on 07 Jun 2019</p>
+            </div>
+            <button class="mt-0.5 w-8 h-8 rounded-lg border border-line grid place-items-center">☐</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Assigned -->
+      <section class="mt-3 bg-white rounded-2xl border border-line shadow-soft">
+        <div class="px-4 py-3 border-b border-line">
+          <p class="text-xs text-slate-500">Assigned to</p>
+        </div>
+        <div class="p-3">
+          <button class="w-9 h-9 rounded-lg border border-line grid place-items-center bg-white">+</button>
+        </div>
+      </section>
+
+      <!-- Due -->
+      <section class="mt-3 bg-white rounded-2xl border border-line shadow-soft">
+        <div class="px-4 py-3 border-b border-line">
+          <p class="text-xs text-slate-500">Due to</p>
+        </div>
+        <div class="p-3 flex gap-2">
+          <button class="px-3 py-2 rounded-lg border border-line bg-white text-sm inline-flex items-center gap-2 shadow-sm">📅 <span>Select date</span></button>
+          <button class="px-3 py-2 rounded-lg border border-line bg-white text-sm inline-flex items-center gap-2 shadow-sm">🏷 <span>Select tag</span></button>
+        </div>
+      </section>
+
+      <!-- Description -->
+      <section class="mt-3 bg-white rounded-2xl border border-line shadow-soft">
+        <div class="px-4 py-3 border-b border-line">
+          <p class="text-xs text-slate-500">Description</p>
+        </div>
+        <div class="p-3">
+          <textarea rows="5" class="w-full rounded-lg border border-line px-3 py-2 outline-none bg-[#fbfbfe] placeholder-slate-400" placeholder="Start typing…"></textarea>
+        </div>
+      </section>
+
+      <!-- Subtasks -->
+      <section class="mt-3 bg-white rounded-2xl border border-line shadow-soft">
+        <div class="px-4 py-3 border-b border-line">
+          <p class="text-xs text-slate-500">Subtasks</p>
+        </div>
+        <div class="p-3 flex items-center gap-3">
+          <label class="relative">
+            <input type="checkbox" class="task sr-only">
+            <span class="inline-flex">
+              <span class="check relative w-[18px] h-[18px] rounded-md border border-line bg-white shadow-sm"></span>
+            </span>
+          </label>
+          <input class="flex-1 bg-transparent outline-none text-sm placeholder-slate-400" placeholder="Type to add more …"/>
+        </div>
+      </section>
+
+      <!-- Attachments -->
+      <section class="mt-3 bg-white rounded-2xl border border-line shadow-soft">
+        <div class="px-4 py-3 border-b border-line">
+          <p class="text-xs text-slate-500">Attachments</p>
+        </div>
+        <div class="p-3">
+          <button class="inline-flex items-center gap-2 text-slate-700 px-3 py-2 rounded-lg border border-line bg-white shadow-sm">
+            ⬆️ <span>Upload your attachment</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <button class="mt-4 w-full h-12 rounded-xl text-white font-semibold shadow-soft"
+              style="background:linear-gradient(135deg,#6C63FF,#8F89FF)">
+        Create New Task
+      </button>
+
+      <div class="pb-24"></div>
+    </div>
+
+    <!-- Bottom dock with safe-area -->
+    <nav class="fixed bottom-0 inset-x-0 bg-white border-t border-line pb-safe">
+      <div class="h-16 flex items-center justify-between px-3">
+        <button class="w-11 h-11 rounded-xl border border-line grid place-items-center">🏠</button>
+        <button class="w-11 h-11 rounded-xl border border-line grid place-items-center bg-chip text-chipTxt">📄</button>
+        <button class="w-11 h-11 rounded-xl border border-line grid place-items-center">✉️</button>
+        <button class="w-11 h-11 rounded-xl border border-line grid place-items-center">📅</button>
+        <button class="w-11 h-11 rounded-xl border border-line grid place-items-center">≡</button>
+      </div>
+    </nav>
+  </main>
+
+  <script>
+    // Show desktop dialog automatically on md+ for demo
+    const dlg = document.getElementById('dialog');
+    if (window.matchMedia('(min-width: 768px)').matches) {
+      dlg.classList.remove('hidden');
+    }
+    document.getElementById('closeDesktop')?.addEventListener('click', ()=> dlg.classList.add('hidden'));
+    dlg.addEventListener('click', (e)=>{ if(e.target===dlg) dlg.classList.add('hidden'); });
+    window.addEventListener('keydown', (e)=>{ if(e.key==='Escape') dlg.classList.add('hidden'); });
+  </script>
+</body>
+</html>

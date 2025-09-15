@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tasks — Empty State</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            bg: '#F6F7FB',
+            line: '#ECECF2',
+            brand: '#6C63FF',
+            brand2:'#C6C2FF'
+          },
+          boxShadow: {
+            soft: '0 10px 30px rgba(18,23,50,.06)'
+          }
+        }
+      }
+    }
+  </script>
+  <style> body{font-family: ui-sans-serif, system-ui, -apple-system, "Inter", Segoe UI, Roboto, Arial} </style>
+</head>
+<body class="bg-[#f7f7fb]">
+  <!-- Page shell -->
+  <div class="min-h-dvh flex">
+    <!-- Sidebar (desktop) -->
+    <aside class="hidden lg:flex w-[320px] shrink-0 flex-col gap-4 p-4">
+      <!-- Company card -->
+      <div class="bg-white border border-line rounded-2xl shadow-soft p-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl grid place-items-center text-white font-bold"
+               style="background:linear-gradient(135deg,#6C63FF,#C6C2FF)">C</div>
+          <div>
+            <p class="font-semibold text-sm">CRAFTUI LLC</p>
+            <p class="text-xs text-slate-500">8484 Ross Wells</p>
+          </div>
+        </div>
+        <button class="w-9 h-9 rounded-lg border border-line grid place-items-center">⋮</button>
+      </div>
+
+      <!-- Tasks overview -->
+      <div class="bg-white border border-line rounded-2xl shadow-soft p-4">
+        <p class="font-semibold">Tasks overview</p>
+        <p class="text-xs text-slate-500 mt-0.5">Overall tasks performance</p>
+
+        <div class="mt-3 space-y-3">
+          <!-- Card -->
+          <div class="flex items-center justify-between border border-line rounded-xl p-3">
+            <div>
+              <p class="text-sm text-slate-500">All tasks</p>
+              <p class="text-xl font-bold">298</p>
+            </div>
+            <button class="w-10 h-10 rounded-lg bg-[#f5f6ff] grid place-items-center">≡</button>
+          </div>
+
+          <div class="flex items-center justify-between border border-line rounded-xl p-3">
+            <div>
+              <p class="text-sm text-slate-500">Pending</p>
+              <p class="text-xl font-bold">84</p>
+            </div>
+            <div class="w-10 h-10 rounded-lg bg-[#fff7e8] grid place-items-center">⏳</div>
+          </div>
+
+          <div class="flex items-center justify-between border border-line rounded-xl p-3">
+            <div>
+              <p class="text-sm text-slate-500">Complete</p>
+              <p class="text-xl font-bold">214</p>
+            </div>
+            <div class="w-10 h-10 rounded-lg bg-[#fff0f3] grid place-items-center">✔</div>
+          </div>
+
+          <div class="flex items-center justify-between border border-line rounded-xl p-3">
+            <div>
+              <p class="text-sm text-slate-500">Archived</p>
+              <p class="text-xl font-bold">380</p>
+            </div>
+            <div class="w-10 h-10 rounded-lg bg-[#eef6ff] grid place-items-center">📦</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Conversion history -->
+      <div class="bg-white border border-line rounded-2xl shadow-soft p-4">
+        <p class="font-semibold">Conversion history</p>
+        <p class="text-xs text-slate-500">Week to week performance</p>
+
+        <div class="mt-3 h-36 border border-line rounded-xl overflow-hidden relative">
+          <!-- Simple columns placeholder -->
+          <div class="absolute inset-0 grid grid-cols-12 gap-2 px-2 items-end">
+            <div class="h-10 bg-[rgba(108,99,255,.25)] rounded"></div>
+            <div class="h-20 bg-[rgba(108,99,255,.25)] rounded"></div>
+            <div class="h-14 bg-[rgba(108,99,255,.25)] rounded"></div>
+            <div class="h-28 bg-[rgba(108,99,255,.25)] rounded"></div>
+            <div class="h-16 bg-[rgba(108,99,255,.25)] rounded"></div>
+            <div class="h-24 bg-[rgba(108,99,255,.25)] rounded"></div>
+            <div class="h-12 bg-[rgba(108,99,255,.25)] rounded"></div>
+            <div class="h-28 bg-[rgba(108,99,255,.25)] rounded"></div>
+            <div class="h-16 bg-[rgba(108,99,255,.25)] rounded"></div>
+            <div class="h-24 bg-[rgba(108,99,255,.25)] rounded"></div>
+            <div class="h-10 bg-[rgba(108,99,255,.25)] rounded"></div>
+            <div class="h-20 bg-[rgba(108,99,255,.25)] rounded"></div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 mt-3">
+          <div class="rounded-xl border border-line p-3 text-center">
+            <p class="font-semibold">$342,000</p>
+            <p class="text-xs text-slate-500">Total sales</p>
+          </div>
+          <div class="rounded-xl border border-line p-3 text-center">
+            <p class="font-semibold">$200,000</p>
+            <p class="text-xs text-slate-500">Spendings</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main column -->
+    <div class="flex-1 flex flex-col">
+      <!-- Top bar -->
+      <header class="h-16 bg-white border-b border-line flex items-center px-4 lg:px-6 justify-between">
+        <div class="flex items-center gap-3">
+          <button class="lg:hidden w-10 h-10 grid place-items-center rounded-lg border border-line">☰</button>
+          <h1 class="font-semibold">Tasks</h1>
+        </div>
+        <div class="flex items-center gap-2">
+          <button class="w-10 h-10 grid place-items-center rounded-lg border border-line">🔍</button>
+          <button class="w-10 h-10 grid place-items-center rounded-lg border border-line">⚙️</button>
+        </div>
+      </header>
+
+      <!-- Empty state center -->
+      <main class="flex-1 grid place-items-center p-4">
+        <div class="max-w-[720px] w-full text-center">
+          <!-- Illustration (inline SVG matching style) -->
+          <div class="mx-auto max-w-[520px]">
+            <svg viewBox="0 0 640 360" class="w-full h-auto">
+              <ellipse cx="320" cy="300" rx="180" ry="24" fill="#2f2e41" opacity=".2"/>
+              <rect x="250" y="130" width="180" height="120" rx="8" fill="#2f2e41"/>
+              <rect x="260" y="140" width="160" height="80" rx="4" fill="#E8EBF6"/>
+              <rect x="210" y="220" width="260" height="18" rx="4" fill="#3f3d56"/>
+              <rect x="225" y="238" width="50" height="46" rx="4" fill="#2f2e41"/>
+              <rect x="365" y="238" width="50" height="46" rx="4" fill="#2f2e41"/>
+              <circle cx="322" cy="170" r="6" fill="#6C63FF"/>
+              <!-- Person -->
+              <circle cx="320" cy="150" r="22" fill="#ccc"/>
+              <rect x="300" y="170" width="40" height="70" rx="10" fill="#cfd2e6"/>
+              <rect x="292" y="232" width="56" height="50" rx="10" fill="#6C63FF"/>
+            </svg>
+          </div>
+
+          <h2 class="mt-6 text-2xl lg:text-3xl font-bold">No tasks found?</h2>
+          <p class="mt-2 text-slate-500 max-w-[560px] mx-auto">
+            Try to assign more tasks to employees or create a new project and set it up from scratch.
+          </p>
+
+          <button class="mt-6 inline-flex items-center justify-center px-6 py-3 rounded-xl text-white font-semibold"
+                  style="background:linear-gradient(135deg,#6C63FF,#8F89FF)">
+            Setup
+          </button>
+        </div>
+      </main>
+
+      <!-- Mobile bottom dock (optional; matches the family of screens) -->
+      <nav class="lg:hidden fixed bottom-0 inset-x-0 h-16 bg-white border-t border-line z-40">
+        <div class="h-full px-3 flex items-center justify-between">
+          <button class="w-11 h-11 rounded-xl border border-line grid place-items-center">🏠</button>
+          <button class="w-11 h-11 rounded-xl border border-line grid place-items-center">📦</button>
+          <button class="w-11 h-11 rounded-xl border border-line grid place-items-center bg-[#eef0ff] text-[#5a5eea]">✉️</button>
+          <button class="w-11 h-11 rounded-xl border border-line grid place-items-center">📅</button>
+          <button class="w-11 h-11 rounded-xl border border-line grid place-items-center">≡</button>
+        </div>
+      </nav>
+    </div>
+  </div>
+</body>
+</html>
