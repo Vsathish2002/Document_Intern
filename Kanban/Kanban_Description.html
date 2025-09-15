@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <title>Kanban + Task Dialog — Tailwind</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            line:'#ECECF2',
+            brand:'#6C63FF',
+            brand2:'#C6C2FF',
+            chip:'#eef0ff',
+            chipTxt:'#5a5eea'
+          },
+          boxShadow:{ soft:'0 10px 30px rgba(18,23,50,.06)' }
+        }
+      }
+    }
+  </script>
+  <style>
+    body{font-family:ui-sans-serif,system-ui,-apple-system,Inter,Segoe UI,Roboto,Arial}
+    .pt-safe{padding-top:env(safe-area-inset-top)}
+    .pb-safe{padding-bottom:env(safe-area-inset-bottom)}
+  </style>
+</head>
+<body class="bg-[#F6F7FB]">
+
+  <!-- DESKTOP: Kanban with centered dialog -->
+  <div class="hidden lg:grid grid-cols-[78px_300px_1fr] gap-4 p-4 min-h-dvh">
+    <!-- Slim icon sidebar -->
+    <aside class="flex flex-col items-center gap-5 bg-white border border-line rounded-2xl shadow-soft py-4">
+      <div class="w-10 h-10 rounded-xl grid place-items-center text-white font-bold" style="background:linear-gradient(135deg,#6C63FF,#C6C2FF)">C</div>
+      <button class="w-10 h-10 rounded-lg border border-line">🏠</button>
+      <button class="w-10 h-10 rounded-lg border border-line">📦</button>
+      <button class="w-10 h-10 rounded-lg border border-line bg-[#eef0ff] text-[#5a5eea]">🗂</button>
+      <button class="w-10 h-10 rounded-lg border border-line">👤</button>
+      <button class="w-10 h-10 rounded-lg border border-line">✉️</button>
+      <div class="mt-auto"><img class="w-8 h-8 rounded-full" src="https://i.pravatar.cc/40?img=11" alt=""></div>
+    </aside>
+
+    <!-- Left insights (put Chart.js area graph canvas here if needed) -->
+    <aside class="bg-white border border-line rounded-2xl shadow-soft p-4">
+      <p class="font-semibold">Tasks overview</p>
+      <p class="text-xs text-slate-500">Overall tasks performance</p>
+
+      <div class="mt-3 space-y-3">
+        <div class="rounded-xl border border-line p-3">
+          <div class="flex items-center justify-between"><div><p class="text-xs text-slate-500">To do</p><p class="text-xl font-bold">1,345</p></div><p class="text-sm text-slate-500">75%</p></div>
+          <div class="mt-2 h-1.5 rounded-full bg-slate-200"><div class="h-full w-3/4 rounded-full bg-emerald-400"></div></div>
+        </div>
+        <div class="rounded-xl border border-line p-3">
+          <div class="flex items-center justify-between"><div><p class="text-xs text-slate-500">Pending</p><p class="text-xl font-bold">840</p></div><p class="text-sm text-slate-500">30%</p></div>
+          <div class="mt-2 h-1.5 rounded-full bg-slate-200"><div class="h-full w-1/3 rounded-full bg-amber-400"></div></div>
+        </div>
+        <div class="rounded-xl border border-line p-3">
+          <div class="flex items-center justify-between"><div><p class="text-xs text-slate-500">Done</p><p class="text-xl font-bold">1,084</p></div><p class="text-sm text-slate-500">80%</p></div>
+          <div class="mt-2 h-1.5 rounded-full bg-slate-200"><div class="h-full w-4/5 rounded-full bg-indigo-500"></div></div>
+        </div>
+      </div>
+
+      <div class="mt-5">
+        <p class="font-semibold">Conversion history</p>
+        <p class="text-xs text-slate-500">Week to week performance</p>
+        <div class="mt-3 rounded-xl border border-line p-2">
+          <div class="relative h-32">
+            <!-- <canvas id="leftAreaChart"></canvas> -->
+            <div class="h-full w-full rounded-lg bg-gradient-to-b from-indigo-50 to-white"></div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 mt-3">
+          <div class="rounded-xl border border-line p-3 text-center"><p class="font-semibold">$342,000</p><p class="text-xs text-slate-500">Total sales</p></div>
+          <div class="rounded-xl border border-line p-3 text-center"><p class="font-semibold">$200,000</p><p class="text-xs text-slate-500">Spendings</p></div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Kanban host (background only, dialog on top) -->
+    <main class="relative">
+      <header class="bg-white border border-line rounded-2xl shadow-soft h-14 px-4 flex items-center justify-between">
+        <div class="flex items-center gap-3"><button class="w-10 h-10 rounded-lg border border-line grid place-items-center">≡</button><p class="font-semibold">Kanban Desk</p></div>
+        <div class="flex items-center gap-2"><button class="w-10 h-10 rounded-lg border border-line grid place-items-center">🔍</button><button class="w-10 h-10 rounded-lg border border-line grid place-items-center">⚙️</button></div>
+      </header>
+
+      <section class="mt-4 bg-white border border-line rounded-2xl shadow-soft p-4 h-[calc(100vh-8rem)] overflow-hidden">
+        <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3 h-full">
+          <!-- Placeholder dotted columns to mimic board -->
+          <div class="rounded-2xl border-2 border-dashed border-[#e6e7f1]"></div>
+          <div class="rounded-2xl border-2 border-dashed border-[#e6e7f1]"></div>
+          <div class="rounded-2xl border-2 border-dashed border-[#e6e7f1]"></div>
+        </div>
+      </section>
+
+      <!-- Centered modal dialog -->
+      <div class="fixed inset-0 z-50 grid place-items-center bg-black/40 backdrop-blur-[1px] p-4">
+        <div class="w-full max-w-3xl bg-white rounded-2xl border border-line shadow-soft overflow-hidden">
+          <!-- dialog header controls -->
+          <div class="px-6 pt-5 flex items-center justify-between">
+            <button class="px-2.5 py-1.5 rounded-md border border-line text-xs bg-white">Mark as Complete</button>
+            <button class="w-10 h-10 rounded-lg border border-line grid place-items-center bg-white">⋮</button>
+          </div>
+
+          <div class="px-6 pt-2">
+            <h2 class="text-lg font-semibold text-slate-900">Design new dashboard for client</h2>
+            <p class="text-xs text-slate-500">Task created on 07 Jun 2019</p>
+          </div>
+
+          <!-- Assigned / Due -->
+          <div class="px-6 mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <p class="text-xs text-slate-500 mb-1">Assigned to</p>
+              <div class="flex items-center gap-1.5">
+                <img class="w-8 h-8 rounded-xl object-cover" src="https://i.pravatar.cc/64?img=12" alt="">
+                <img class="w-8 h-8 rounded-xl object-cover" src="https://i.pravatar.cc/64?img=22" alt="">
+                <img class="w-8 h-8 rounded-xl object-cover" src="https://i.pravatar.cc/64?img=36" alt="">
+                <button class="w-8 h-8 rounded-xl border border-line grid place-items-center bg-white">+</button>
+              </div>
+            </div>
+            <div class="md:col-span-2">
+              <p class="text-xs text-slate-500 mb-1">Due to</p>
+              <div class="flex items-center gap-2">
+                <button class="px-3 py-2 rounded-lg border border-line bg-white text-sm inline-flex items-center gap-2 shadow-soft">📅 <span>14 Aug 2018</span></button>
+                <button class="px-3 py-2 rounded-lg bg-[#eef0ff] text-[#5a5eea] text-sm border border-[#e2e5ff] shadow-soft">Spotify</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="h-px bg-line my-5"></div>
+
+          <!-- Description -->
+          <section class="px-6">
+            <h3 class="font-semibold">Description</h3>
+            <p class="mt-2 text-sm text-slate-700 leading-relaxed">
+              When first getting into the online advertising business, the magical combination that puts a website into the top search engine rankings can catapult reach to the forefront of minds, leading to outcomes beyond expectations.
+            </p>
+          </section>
+
+          <!-- Checklist -->
+          <section class="px-6 mt-5">
+            <div class="flex items-center justify-between"><h3 class="font-semibold">Checklist</h3><p class="text-xs text-slate-500">1 / 3</p></div>
+            <div class="mt-2 h-1.5 rounded-full bg-slate-200"><div class="h-full w-1/3 rounded-full bg-amber-400"></div></div>
+
+            <div class="mt-3 space-y-2">
+              <div class="flex items-center gap-3">
+                <button class="w-4 h-4 rounded-[6px] border border-line bg-[#eef0ff] text-[#5a5eea] grid place-items-center">✔</button>
+                <span class="text-sm">Design new home page</span>
+              </div>
+              <div class="flex items-center gap-3 text-slate-400">
+                <button class="w-4 h-4 rounded-[6px] border border-line grid place-items-center bg-white"></button>
+                <span class="text-sm">Send design samples to the customer</span>
+              </div>
+              <div class="flex items-center gap-3 text-slate-400">
+                <button class="w-4 h-4 rounded-[6px] border border-line grid place-items-center bg-white"></button>
+                <input class="flex-1 bg-transparent outline-none text-sm placeholder-slate-400" placeholder="Type to add more …"/>
+              </div>
+            </div>
+          </section>
+
+          <!-- Attachments -->
+          <section class="px-6 mt-6">
+            <h3 class="font-semibold">Attachments</h3>
+            <button class="mt-3 inline-flex items-center gap-2 text-slate-700 px-3 py-2 rounded-lg border border-line bg-white shadow-soft">
+              ⬆️ <span>Upload your attachment</span>
+            </button>
+          </section>
+
+          <!-- Footer comment bar -->
+          <div class="mt-6 px-6 py-4 bg-[#fbfbfe] border-t border-line rounded-b-2xl">
+            <div class="flex items-center gap-2">
+              <input class="flex-1 bg-white border border-line rounded-xl px-3 py-2 outline-none" placeholder="Add your comment"/>
+              <button class="w-10 h-10 rounded-lg border border-line grid place-items-center bg-white">📎</button>
+              <button class="w-10 h-10 rounded-lg border border-line grid place-items-center bg-white">🖼</button>
+              <button class="px-4 py-2 rounded-xl text-white font-semibold" style="background:linear-gradient(135deg,#6C63FF,#8F89FF)">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- MOBILE: Kanban list (To do) -->
+  <div class="lg:hidden fixed inset-0 overflow-y-auto bg-[#F6F7FB]">
+    <header class="pt-safe bg-white border-b border-line">
+      <div class="h-14 flex items-center justify-between px-3">
+        <button class="w-10 h-10 rounded-lg border border-line grid place-items-center">🔍</button>
+        <p class="font-semibold">Kanban Desk</p>
+        <button class="w-10 h-10 rounded-lg border border-line grid place-items-center">⚙️</button>
+      </div>
+    </header>
+
+    <main class="px-3 pb-24">
+      <div class="flex items-center justify-between mt-4">
+        <h2 class="font-semibold">To do</h2>
+        <div class="flex gap-2">
+          <button class="w-10 h-10 rounded-lg border border-line grid place-items-center bg-white">⌄</button>
+          <button class="w-10 h-10 rounded-lg border border-line grid place-items-center bg-white">⌃</button>
+        </div>
+      </div>
+
+      <!-- Card list -->
+      <ul class="mt-3 space-y-3">
+        <li class="bg-white rounded-2xl border border-line p-3 shadow-soft">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="font-semibold">Design new UI presentation</p>
+              <p class="text-xs text-slate-500">Dribbble Presentation</p>
+            </div>
+            <button class="w-8 h-8 rounded-lg border border-line grid place-items-center">⋮</button>
+          </div>
+          <div class="mt-3">
+            <div class="text-xs text-slate-500">Progress</div>
+            <div class="mt-1 h-1.5 rounded-full bg-slate-200"><div class="h-full w-[52%] rounded-full bg-amber-400"></div></div>
+          </div>
+          <div class="mt-3 flex items-center gap-3">
+            <span class="px-2 py-1 rounded-md bg-[#f5f6ff] border border-line text-xs">24 Aug 2019</span>
+            <span class="text-xs text-slate-500">💬 4</span>
+            <span class="text-xs text-slate-500">📎 2</span>
+            <span class="text-xs text-slate-500">👁 1</span>
+          </div>
+        </li>
+
+        <li class="bg-white rounded-2xl border border-line p-3 shadow-soft">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="font-semibold">Add more UI/UX mockups</p>
+              <p class="text-xs text-slate-500">Pinterest Promotion</p>
+            </div>
+            <button class="w-8 h-8 rounded-lg border border-line grid place-items-center">⋮</button>
+          </div>
+          <div class="mt-3"><div class="text-xs text-slate-500">Progress</div><div class="mt-1 h-1.5 rounded-full bg-slate-200"><div class="h-full w-[66%] rounded-full bg-amber-400"></div></div></div>
+          <div class="mt-3 flex items-center gap-3">
+            <span class="px-2 py-1 rounded-md bg-[#fff5f5] border border-[#ffdede] text-[#b85454] text-xs">14 Mar 2019</span>
+            <div class="flex -space-x-2">
+              <img class="w-7 h-7 rounded-xl border border-white" src="https://i.pravatar.cc/32?img=14" alt="">
+              <img class="w-7 h-7 rounded-xl border border-white" src="https://i.pravatar.cc/32?img=22" alt="">
+            </div>
+            <span class="ml-auto px-2 py-1 rounded-md border border-line text-xs">+5</span>
+          </div>
+        </li>
+
+        <li class="bg-white rounded-2xl border border-line p-3 shadow-soft">
+          <div class="flex items-start justify-between">
+            <div>
+              <p class="font-semibold">Design few mobile screens</p>
+              <p class="text-xs text-slate-500">Dropbox Mobile App</p>
+            </div>
+            <button class="w-8 h-8 rounded-lg border border-line grid place-items-center">⋮</button>
+          </div>
+          <div class="mt-3"><div class="text-xs text-slate-500">Progress</div><div class="mt-1 h-1.5 rounded-full bg-slate-200"><div class="h-full w-[22%] rounded-full bg-rose-400"></div></div></div>
+        </li>
+      </ul>
+    </main>
+
+    <nav class="fixed bottom-0 inset-x-0 bg-white border-t border-line pb-safe">
+      <div class="h-16 flex items-center justify-between px-3">
+        <button class="w-11 h-11 rounded-xl border border-line grid place-items-center">🏠</button>
+        <button class="w-11 h-11 rounded-xl border border-line grid place-items-center">📦</button>
+        <button class="w-11 h-11 rounded-xl border border-line grid place-items-center bg-chip text-chipTxt">🗂</button>
+        <button class="w-11 h-11 rounded-xl border border-line grid place-items-center">📅</button>
+        <button class="w-11 h-11 rounded-xl border border-line grid place-items-center">≡</button>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Optional: if you want a real chart in the left panel, reuse Chart.js config from earlier answers -->
+  <!-- Modal/overlay styling is based on Tailwind modal dialog patterns to match the desktop screenshot -->
+</body>
+</html>
