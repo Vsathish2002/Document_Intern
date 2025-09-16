@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lost Password</title>
+      <link rel="stylesheet" href="../../assets/css/output.css">
+
+</head>
+<body class="bg-blue-600 min-h-screen flex items-center justify-center font-sans">
+
+  <!-- Container for Laptop view -->
+  <div class="hidden md:flex w-full max-w-6xl h-[600px] bg-white rounded-lg shadow-lg overflow-hidden">
+
+    <!-- Left form side -->
+    <div class="w-1/2 p-14 flex flex-col justify-center rounded-l-lg">
+      <h1 class="text-3xl font-bold mb-2">
+        Lost your password?<br />
+        <span class="text-black">Enter your details to recover.</span>
+      </h1>
+      <p class="text-gray-400 mb-10">Enter your details to proceed further</p>
+      <form class="w-full max-w-sm space-y-8">
+        <!-- Email input -->
+        <div>
+          <label for="email" class="text-sm font-medium text-gray-500 mb-1 block">Email</label>
+          <div class="relative">
+            <input 
+              type="email" id="email" placeholder="Start typing..." 
+              class="w-full border-b border-gray-300 focus:border-blue-500 outline-none py-2 pr-10 text-gray-700" 
+              required
+            />
+            <svg class="absolute right-0 top-2.5 w-5 h-5 text-gray-400 mr-2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16 12l-4-4m0 0l-4 4m4-4v12" />
+            </svg>
+          </div>
+        </div>
+
+        <!-- Recover button -->
+        <button 
+          type="submit" 
+          class="bg-blue-600 text-white rounded-md px-6 py-3 w-full hover:bg-blue-700 transition-colors"
+        >Recover</button>
+      </form>
+
+      <!-- Social sign-in -->
+      <div class="mt-12 flex items-center space-x-4 text-gray-500 text-sm">
+        <button aria-label="Twitter" class="p-2 border rounded shadow hover:bg-gray-100">
+          <svg class="w-5 h-5 fill-current text-blue-400" viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 01-3.14 1.53A4.48 4.48 0 0022.4.36a9.12 9.12 0 01-2.88 1.11 4.5 4.5 0 00-7.67 4v.32a12.94 12.94 0 01-9.4-4.77 4.48 4.48 0 001.39 6.07 4.5 4.5 0 01-2-.55v.06a4.5 4.5 0 003.6 4.41 4.49 4.49 0 01-2 .07 4.5 4.5 0 004.2 3.13A9 9 0 012 20.54 12.72 12.72 0 008.29 22c7.55 0 11.68-6.28 11.68-11.68 0-.18-.01-.36-.02-.54A8.36 8.36 0 0023 3z"/></svg>
+        </button>
+        <button aria-label="Google" class="p-2 border rounded shadow hover:bg-gray-100">
+          <svg class="w-5 h-5" viewBox="0 0 24 24">
+            <path fill="#EA4335" d="M12 10.2v3.6h5.42c-.2 1.32-1.56 3.87-5.42 3.87-3.27 0-5.95-2.7-5.95-6s2.68-6 5.95-6c1.86 0 3.12.8 3.84 1.5l2.62-2.52C16.61 5.27 14.72 4.4 12 4.4c-5 0-9 4-9 9s4 9 9 9c5.23 0 8.7-3.66 8.7-8.83 0-.6-.06-1.04-.14-1.5H12z"/>
+          </svg>
+        </button>
+        <button aria-label="Facebook" class="p-2 border rounded shadow hover:bg-gray-100">
+          <svg class="w-5 h-5 fill-current text-blue-600" viewBox="0 0 24 24"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12a10 10 0 0010 10c5 0 9-4 10-10zM15.18 12h-2V20h-3v-8H8V9h2.18V7.09c0-2.1 1.28-3.34 3.21-3.34.93 0 1.72.07 1.95.1v2.27h-1.36c-1.1 0-1.31.53-1.31 1.3V9h2.5l-.34 3z"/></svg>
+        </button>
+        <span>Or sign in with</span>
+      </div>
+    </div>
+
+    <!-- Right image side -->
+    <div class="w-1/2 bg-blue-600 flex items-center justify-center relative rounded-r-lg overflow-hidden">
+      <img
+        src="../../assets/images/Login/lostpassword.svg" 
+        alt="Email illustration"
+        class="w-3/4"
+        loading="lazy"
+      />
+    </div>
+  </div>
+
+  <!-- Mobile view -->
+  <div class="md:hidden w-full max-w-sm bg-blue-600 min-h-screen flex flex-col justify-between rounded-t-xl shadow-lg">
+    <div class="pt-20 flex flex-col items-center text-center px-6">
+
+      <div class="bg-blue-400 w-12 h-12 rounded-lg flex items-center justify-center mb-8 text-white font-bold text-xl">C</div>
+
+      <h1 class="text-white text-2xl font-semibold mb-2">Lost your password?</h1>
+      <p class="text-blue-200 mb-12 text-sm">Enter your details to proceed further</p>
+
+      <form class="w-full bg-white rounded-t-3xl px-6 pt-9 pb-12">
+        <label class="block text-gray-500 text-xs mb-2" for="fullname-mobile">Full name</label>
+        <div class="mb-8 relative">
+          <input
+            id="fullname-mobile"
+            type="text"
+            value="Craft UI"
+            class="w-full border-b border-gray-300 focus:border-blue-600 outline-none py-2 pr-8 text-gray-700"
+          />
+          <svg class="absolute right-0 top-2.5 w-5 h-5 text-gray-400 mr-2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A6.966 6.966 0 0112 15a6.966 6.966 0 016.879 2.804M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+        </div>
+
+        <label class="block text-gray-500 text-xs mb-2" for="email-mobile">Email</label>
+        <div class="mb-10 relative">
+          <input
+            id="email-mobile"
+            type="email"
+            value="support@craftui.com"
+            class="w-full border-b border-gray-300 focus:border-blue-600 outline-none py-2 pr-8 text-gray-700"
+          />
+          <svg class="absolute right-0 top-2.5 w-5 h-5 text-blue-600 mr-2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+
+        <button type="submit" class="w-full bg-blue-600 text-white rounded-md py-3 font-semibold hover:bg-blue-700 transition-colors">
+          Recover
+        </button>
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>
