@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Flex Wrap Example</title>
+  <style>
+    .container {
+      display: flex;
+      flex-wrap: wrap; /* items move to next line if needed */
+      gap: 10px;
+      background: lightgray;
+      padding: 10px;
+    }
+    .item {
+      background: coral;
+      width: 150px;
+      height: 100px;
+      text-align: center;
+      line-height: 100px;
+      font-weight: bold;
+      color: white;
+    }
+    .tooltip {
+  position: relative;        /* Needed to position tooltip text */
+  display: inline-block;     /* Keep it inline */
+  cursor: pointer;           /* Shows pointer on hover */
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;        /* Hide by default */
+  width: 140px;              /* Tooltip width */
+  background-color: black;   /* Background color */
+  color: #fff;               /* Text color */
+  text-align: center;        /* Center text */
+  padding: 5px 8px;          /* Some padding */
+  border-radius: 6px;        /* Rounded corners */
+  
+  position: absolute;        /* Position relative to parent */
+  bottom: 125%;              /* Show above the element */
+  left: 50%;
+  transform: translateX(-50%); /* Center horizontally */
+
+  opacity: 0;                /* Invisible */
+  transition: opacity 0.3s;  /* Smooth fade */
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;       /* Show on hover */
+  opacity: 1;                /* Fade in */
+}
+
+.fab {
+  position: fixed;          /* Stays on screen */
+  bottom: 20px;             /* Distance from bottom */
+  right: 20px;              /* Distance from right */
+  width: 60px;
+  height: 60px;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 50%;       /* Circle shape */
+  font-size: 30px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+.fab:hover {
+  background-color: darkred;
+}
+
+  </style>
+</head>
+<body>
+  <h2>Flex Wrap Example</h2>
+  <div class="container">
+    <div class="item">1</div>
+    <div class="item">2</div>
+    <div class="item">3</div>
+    <div class="item">4</div>
+    <div class="item">5</div>
+    <div class="item">6</div>
+  </div>
+
+
+  <p style="font-family: 'Courier New', monospace;">
+  This is monospace text. All letters and spaces take same width.
+</p>
+
+<p style="font-family: 'Comic Sans MS', cursive;">
+  This is cursive text. It looks like handwriting!
+</p>
+
+<h1 style="font-family: Impact, fantasy;">
+  This is fantasy text — perfect for headings!
+</h1>
+
+
+<div class="tooltip">Hover me
+  <span class="tooltiptext">This is the tooltip text!</span>
+</div>
+<button class="fab">+</button>
+<link rel="icon" href="favicon.png" type="image/png">
+
+<audio id="myAudio" controls>
+  <source src="music.mp3" type="audio/mp3">
+  Your browser does not support the audio element.
+</audio>
+
+
+</body>
+</html>

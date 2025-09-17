@@ -1,890 +1,199 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CraftUI Dashboard</title>
+  <title>CraftUI Dashboard — Mobile First</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../../assets/css/output.css">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            'brand': '#6c63ff',
-            'brand-2': '#c6c2ff',
-            'panel': '#ffffff',
-            'muted': '#707480',
-            'text': '#17181c',
-            'line': '#ececf2',
-            'good': '#4caf50',
-            'warn': '#f6a723',
-            'danger': '#e45d5d',
-            'chip-bg': '#eef0ff',
-            'chip-txt': '#5a5eea',
-            'bg': '#f6f7fb'
-          },
-          boxShadow: {
-            'custom': '0 10px 30px rgba(18, 23, 50, .06)'
-          },
-          fontFamily: {
-            'sans': ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'Arial', 'sans-serif']
-          }
-        }
-      }
-    }
-  </script>
+  <link rel="stylesheet" href="../../assets/css/output.css">
+
   <style>
-    :root {
-      --bg: #f6f7fb;
-      --panel: #ffffff;
-      --muted: #707480;
-      --text: #17181c;
-      --brand: #6c63ff;
-      --brand-2: #c6c2ff;
-      --line: #ececf2;
-      --good: #4caf50;
-      --warn: #f6a723;
-      --danger: #e45d5d;
-      --chip-bg: #eef0ff;
-      --chip-txt: #5a5eea;
-      --shadow: 0 10px 30px rgba(18, 23, 50, .06);
+    :root{
+      --bg:#f6f7fb; --panel:#fff; --muted:#707480; --text:#17181c; --brand:#6c63ff; --brand-2:#c6c2ff;
+      --line:#ececf2; --good:#4caf50; --danger:#e45d5d; --chip-bg:#eef0ff; --chip-txt:#5a5eea;
+      --shadow:0 10px 30px rgba(18,23,50,.06);
+      --radius-xl:16px; --radius-lg:14px;
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--text);background:var(--bg);line-height:1.45}
+
+    /* Mobile-first layout: single column */
+    .app{display:block;padding:12px 12px calc(96px + var(--safe-bottom))}
+    @media (min-width:768px){
+      .app{display:grid;grid-template-columns:280px minmax(0,1fr);gap:16px;padding:16px 16px calc(96px + var(--safe-bottom))}
+    }
+    @media (min-width:1024px){
+      .app{gap:20px;padding:16px}
     }
 
-    * { box-sizing: border-box }
-    html, body { height: 100% }
-    body {
-      margin: 0;
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color: var(--text);
-      background: var(--bg);
-    }
-
-    /* App grid */
-    .app {
-      display: grid;
-      grid-template-columns: 280px minmax(0, 1fr);
-      gap: 20px;
-      padding: 16px 16px 92px;
-    }
-
-    @media (max-width: 960px) {
-      .app {
-        grid-template-columns: 1fr;
-      }
-      .sidebar {
-        display: none;
+    /* Sidebar (visible only ≥768px) */
+    .sidebar{display:none}
+    @media (min-width:768px){
+      .sidebar{
+        display:flex;flex-direction:column;gap:16px;background:var(--panel);border:1px solid var(--line);
+        border-radius:var(--radius-xl);box-shadow:var(--shadow);padding:16px;min-height:calc(100vh - 64px)
       }
     }
 
-    /* Sidebar */
-    .sidebar {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      box-shadow: var(--shadow);
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-      min-height: calc(100vh - 124px);
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .brand-badge {
-      width: 56px;
-      height: 56px;
-      border-radius: 14px;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(135deg, var(--brand), var(--brand-2));
-      color: #fff;
-      font-weight: 800;
-      font-size: 28px;
-    }
-
-    .brand-text .welcome {
-      margin: 0;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .brand-text .name {
-      margin: 2px 0 0;
-      font-weight: 700;
-    }
-
-    .side-nav {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .nav-item {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: 1px solid transparent;
-      background: transparent;
-      cursor: pointer;
-    }
-
-    .nav-item .icon {
-      width: 22px;
-      text-align: center;
-    }
-
-    .nav-item:hover {
-      background: #f3f4ff;
-    }
-
-    .nav-item.active {
-      background: var(--chip-bg);
-      color: var(--chip-txt);
-      border-color: #e2e3ff;
-    }
-
-    .messages h4,
-    .conversion h4 {
-      margin: 0 0 8px;
-    }
-
-    .message-list {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .message {
-      display: flex;
-      gap: 10px;
-      padding: 8px;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      background: #fafbff;
-    }
-
-    .message img {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      object-fit: cover;
-    }
-
-    .msg-name {
-      margin: 0;
-      font-weight: 600;
-      font-size: 13px;
-    }
-
-    .msg-text {
-      margin: 2px 0 0;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .conversion .muted {
-      margin: 4px 0 10px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .area-chart {
-      height: 120px;
-      border-radius: 14px;
-      background: #eef2ff;
-      border: 1px solid var(--line);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .area-chart .wave {
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(120px 60px at 20% 70%, rgba(108, 99, 255, .35), transparent 70%),
-                  radial-gradient(140px 80px at 70% 20%, rgba(108, 99, 255, .25), transparent 70%),
-                  radial-gradient(100px 50px at 90% 90%, rgba(108, 99, 255, .45), transparent 70%);
-      filter: blur(14px);
-    }
-
-    /* Main */
-    .main {
-      min-width: 0;
-    }
-
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 12px 14px;
-      box-shadow: var(--shadow);
-    }
-
-    .topbar h1 {
-      margin: 0;
-      font-size: 18px;
-    }
-
-    .actions {
-      display: flex;
-      gap: 8px;
-    }
-
-    .icon-btn {
-      border: 1px solid var(--line);
-      background: #fff;
-      border-radius: 10px;
-      padding: 8px 10px;
-      cursor: pointer;
-    }
-
-    .icon-btn:hover {
-      background: #f7f7ff;
-    }
-
-    .only-mobile {
-      display: none;
-    }
-
-    @media (max-width: 960px) {
-      .only-mobile {
-        display: inline-flex;
-      }
-    }
-
-    /* Stats grid */
-    .stats {
-      margin-top: 12px;
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    @media (max-width: 1200px) {
-      .stats {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 960px) {
-      .stats {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 16px;
-      box-shadow: var(--shadow);
-      text-align: center;
-    }
-
-    .card-icon {
-      width: 40px;
-      height: 40px;
-      margin: 0 auto 8px;
-      display: grid;
-      place-items: center;
-      border-radius: 12px;
-      background: var(--chip-bg);
-      color: var(--chip-txt);
-    }
-
-    .value {
-      margin: 0;
-      font-size: 22px;
-      font-weight: 700;
-    }
-
-    .label {
-      margin: 6px 0 0;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    /* Latest sales */
-    .latest {
-      margin-top: 16px;
-    }
-
-    .latest-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
-    }
-
-    .seg {
-      display: flex;
-      gap: 8px;
-    }
-
-    .seg-btn {
-      border: 1px solid var(--line);
-      background: #fff;
-      padding: 8px 12px;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-
-    .seg-btn.active {
-      background: var(--chip-bg);
-      color: var(--chip-txt);
-      border-color: #e2e3ff;
-    }
-
-    /* Mobile list */
-    .list-mobile {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: none;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    @media (max-width: 960px) {
-      .list-mobile {
-        display: flex;
-      }
-    }
-
-    .li {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 10px;
-    }
-
-    .li img {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      border: 1px solid var(--line);
-      object-fit: cover;
-    }
-
-    .li-title {
-      margin: 0;
-      font-weight: 600;
-    }
-
-    .li-sub {
-      margin: 2px 0 0;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .li-price {
-      margin-left: auto;
-      font-weight: 700;
-    }
-
-    /* Desktop table */
-    .table {
-      display: block;
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      overflow: hidden;
-      box-shadow: var(--shadow);
-    }
-
-    @media (max-width: 960px) {
-      .table {
-        display: none;
-      }
-    }
-
-    .thead,
-    .row {
-      display: grid;
-      grid-template-columns: 2fr 1.5fr 1.8fr .8fr .8fr .8fr;
-      gap: 0;
-      align-items: center;
-    }
-
-    .thead {
-      background: #fafaff;
-      color: var(--muted);
-      font-weight: 600;
-      padding: 10px 14px;
-      font-size: 13px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .row {
-      position: relative;
-      padding: 12px 14px;
-      border-bottom: 1px solid var(--line);
-      font-size: 14px;
-    }
-
-    .row:last-child {
-      border-bottom: none;
-    }
-
-    .cell {
-      color: #2a2d34;
-    }
-
-    .cell.product {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .cell.product img {
-      width: 56px;
-      height: 56px;
-      border-radius: 12px;
-      object-fit: cover;
-      border: 1px solid var(--line);
-    }
-
-    .p-title {
-      margin: 0;
-      font-weight: 600;
-    }
-
-    .p-sub {
-      margin: 2px 0 0;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .c-name {
-      margin: 0;
-      font-weight: 600;
-    }
-
-    .c-email {
-      margin: 2px 0 0;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .addr {
-      margin: 0;
-      font-weight: 600;
-    }
-
-    .addr-sub {
-      margin: 2px 0 0;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .status {
-      position: absolute;
-      right: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      padding: 6px 12px;
-      border-radius: 10px;
-      font-size: 12px;
-      font-weight: 600;
-      border: 1px solid transparent;
-    }
-
-    .status.shipped {
-      background: #eaf8ef;
-      color: var(--good);
-      border-color: #cfeedd;
-    }
-
-    .status.processing {
-      background: #fff4e5;
-      color: #c07a08;
-      border-color: #ffe4bd;
-    }
-
-    .status.cancelled {
-      background: #ffe9e9;
-      color: var(--danger);
-      border-color: #ffd0d0;
-    }
-
-    /* Bottom nav (mobile) */
-    .bottom-nav {
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 40;
-      display: none;
-      align-items: center;
-      justify-content: space-around;
-      gap: 8px;
-      padding: 10px 12px;
-      background: #fff;
-      border-top: 1px solid var(--line);
-    }
-
-    @media (max-width: 960px) {
-      .bottom-nav {
-        display: flex;
-      }
-    }
-
-    .bn-item {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      border: 1px solid var(--line);
-      background: #fff;
-      display: grid;
-      place-items: center;
-      font-size: 18px;
-    }
-
-    .bn-item.active {
-      background: var(--chip-bg);
-      color: var(--chip-txt);
-      border-color: #e2e3ff;
-    }
-
-    .bn-add {
-      width: 52px;
-      height: 52px;
-      border-radius: 16px;
-      border: 1px solid var(--line);
-      background: linear-gradient(135deg, var(--brand), var(--brand-2));
-      color: #fff;
-      font-size: 22px;
-      display: grid;
-      place-items: center;
-      margin: 0 6px;
-    }
-
-    /* Modal (Add) */
-    .modal {
-      position: fixed;
-      inset: 0;
-      display: none;
-      align-items: flex-start;
-      justify-content: flex-end;
-      background: rgba(22, 24, 30, .35);
-      backdrop-filter: blur(2px);
-      z-index: 50;
-      padding: 80px 16px 24px;
-    }
-
-    .modal.show {
-      display: flex;
-    }
-
-    .modal-sheet {
-      width: 320px;
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      box-shadow: var(--shadow);
-      padding: 12px;
-      animation: pop .18s ease-out;
-    }
-
-    @keyframes pop {
-      from {
-        transform: translateY(-8px);
-        opacity: 0;
-      }
-      to {
-        transform: none;
-        opacity: 1;
-      }
-    }
-
-    .modal .close {
-      border: none;
-      background: transparent;
-      font-size: 18px;
-      cursor: pointer;
-      float: right;
-      color: #555;
-    }
-
-    .quick-list {
-      list-style: none;
-      margin: 8px 0 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .quick {
-      width: 100%;
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      text-align: left;
-      border: 1px solid var(--line);
-      background: #fff;
-      padding: 12px;
-      border-radius: 12px;
-      cursor: pointer;
-    }
-
-    .quick:hover {
-      background: #f8f9ff;
-    }
-
-    .quick span {
-      font-size: 20px;
-    }
-
-    .q-title {
-      margin: 0;
-      font-weight: 600;
-    }
-
-    .q-sub {
-      margin: 2px 0 0;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    /* Search overlay */
-    .search-overlay {
-      position: fixed;
-      inset: 0;
-      display: none;
-      place-items: start center;
-      z-index: 60;
-      background: rgba(22, 24, 30, .45);
-      backdrop-filter: blur(2px);
-      padding-top: 60px;
-    }
-
-    .search-overlay.show {
-      display: grid;
-    }
-
-    .search-panel {
-      width: min(760px, 92vw);
-      background: #fff;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      box-shadow: var(--shadow);
-      padding: 12px;
-    }
-
-    .search-input-wrap {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 8px 10px;
-      background: #fafbff;
-    }
-
-    .search-input-wrap input {
-      flex: 1;
-      font-size: 16px;
-      border: none;
-      outline: none;
-      background: transparent;
-    }
-
-    .search-input-wrap .close {
-      border: none;
-      background: transparent;
-      font-size: 18px;
-      color: #555;
-      cursor: pointer;
-    }
-
-    .search-results {
-      list-style: none;
-      margin: 10px 0 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      max-height: 50vh;
-      overflow: auto;
-    }
-
-    .search-item {
-      display: grid;
-      grid-template-columns: 40px 1fr auto;
-      gap: 12px;
-      align-items: center;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 10px;
-      background: #fff;
-    }
-
-    .search-item img {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      object-fit: cover;
-    }
-
-    .s-title {
-      margin: 0;
-      font-weight: 600;
-    }
-
-    .s-tag {
-      margin-left: 8px;
-      font-size: 12px;
-      color: var(--chip-txt);
-      background: var(--chip-bg);
-      padding: 2px 8px;
-      border-radius: 999px;
-    }
-
-    .s-sub {
-      margin: 4px 0 0;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .s-role {
-      font-size: 12px;
-      color: #6a6f7a;
-      background: #f1f3ff;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid #e2e5ff;
-    }
+    /* Drawer (mobile) */
+    .drawer{position:fixed;top:0;bottom:0;left:0;width:min(86vw,320px);background:#fff;border-right:1px solid var(--line);
+      transform:translateX(-100%);transition:transform .22s ease-out;z-index:61;overflow:auto;padding:18px 16px;-webkit-overflow-scrolling:touch}
+    .drawer.show{transform:none;box-shadow:8px 0 24px rgba(18,23,50,.12)}
+    .drawer-backdrop{position:fixed;inset:0;background:rgba(23,24,28,.45);backdrop-filter:blur(2px);display:none;z-index:60}
+    .drawer.show + .drawer-backdrop{display:block}
+    @media (min-width:768px){.drawer,.drawer-backdrop{display:none}}
+
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand-badge{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#fff;font-weight:800;font-size:24px}
+    .welcome{margin:0;color:var(--muted);font-size:12px}
+    .name{margin:2px 0 0;font-weight:700}
+
+    .side-nav{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+    .nav-item{display:flex;gap:12px;align-items:center;padding:12px;border-radius:12px;border:1px solid transparent;background:#fff;cursor:pointer}
+    .nav-item:hover{background:#f3f4ff}
+    .nav-item.active{background:var(--chip-bg);color:var(--chip-txt);border-color:#e2e3ff}
+
+    .message-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+    .message{display:flex;gap:10px;padding:10px;border:1px solid var(--line);border-radius:12px;background:#fafbff}
+    .message img{width:36px;height:36px;border-radius:10px;object-fit:cover}
+
+    .main{min-width:0}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-xl);padding:10px 12px;box-shadow:var(--shadow)}
+    .topbar h1{margin:0;font-size:18px}
+    .actions{display:flex;gap:8px}
+    .icon-btn{border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px 12px;min-width:44px;min-height:44px;cursor:pointer}
+
+    /* Stats: 1 col to 2 to 3+ */
+    .stats{margin-top:12px;display:grid;grid-template-columns:1fr;gap:10px}
+    @media (min-width:480px){.stats{grid-template-columns:repeat(2,1fr)}}
+    @media (min-width:1024px){.stats{grid-template-columns:repeat(4,1fr)}}
+    .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius-xl);padding:14px;box-shadow:var(--shadow);text-align:center}
+    .card-icon{width:40px;height:40px;margin:0 auto 8px;display:grid;place-items:center;border-radius:12px;background:var(--chip-bg);color:var(--chip-txt)}
+    .value{margin:0;font-weight:700;font-size:20px}
+    .label{margin:4px 0 0;color:var(--muted);font-size:12px}
+
+    .latest{margin-top:16px}
+    .latest-header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .seg{display:flex;gap:6px;flex-wrap:wrap}
+    .seg-btn{border:1px solid var(--line);background:#fff;padding:8px 10px;border-radius:10px;cursor:pointer}
+    .seg-btn.active{background:var(--chip-bg);color:var(--chip-txt);border-color:#e2e3ff}
+
+    /* Table hidden on mobile; list shown */
+    .table{display:none}
+    @media (min-width:768px){
+      .table{display:block;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:auto;box-shadow:var(--shadow)}
+      .thead,.row{display:grid;grid-template-columns:2fr 1.5fr 1.8fr .8fr .8fr .8fr;min-width:880px}
+      .thead{background:#fafaff;color:var(--muted);font-weight:600;padding:10px 14px;border-bottom:1px solid var(--line)}
+      .row{padding:12px 14px;border-bottom:1px solid var(--line);position:relative}
+      .row:last-child{border-bottom:none}
+      .status{position:absolute;right:14px;top:50%;transform:translateY(-50%);padding:6px 12px;border-radius:10px;font-size:12px;font-weight:600;border:1px solid transparent;white-space:nowrap}
+      .status.shipped{background:#eaf8ef;color:var(--good);border-color:#cfeedd}
+      .status.processing{background:#fff4e5;color:#c07a08;border-color:#ffe4bd}
+      .status.cancelled{background:#ffe9e9;color:var(--danger);border-color:#ffd0d0}
+      .cell.product{display:flex;gap:12px;align-items:center}
+      .cell.product img{width:56px;height:56px;border-radius:12px;border:1px solid var(--line);object-fit:cover}
+    }
+
+    .list-mobile{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+    @media (min-width:768px){.list-mobile{display:none}}
+    .li{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px}
+    .li img{width:48px;height:48px;border-radius:12px;border:1px solid var(--line);object-fit:cover}
+    .li-title{margin:0;font-weight:600}
+    .li-sub{margin:2px 0 0;color:var(--muted);font-size:12px}
+    .li-price{margin-left:auto;font-weight:700}
+
+    .pager{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+    /* Bottom nav */
+    .bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:40;display:flex;align-items:center;justify-content:space-around;gap:8px;padding:10px 12px calc(10px + var(--safe-bottom));background:#fff;border-top:1px solid var(--line)}
+    @media (min-width:768px){.bottom-nav{display:none}}
+    .bn-item{width:46px;height:46px;border-radius:14px;border:1px solid var(--line);background:#fff;display:grid;place-items:center;font-size:18px}
+    .bn-item.active{background:var(--chip-bg);color:var(--chip-txt);border-color:#e2e3ff}
+    .bn-add{width:54px;height:54px;border-radius:16px;border:1px solid var(--line);background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#fff;font-size:22px;display:grid;place-items:center;margin:0 6px}
+
+    /* Overlays */
+    .modal{position:fixed;inset:0;display:none;align-items:flex-start;justify-content:flex-end;background:rgba(22,24,30,.35);backdrop-filter:blur(2px);z-index:50;padding:80px 16px 24px}
+    .modal.show{display:flex}
+    .modal-sheet{width:min(92vw,360px);background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:12px;animation:pop .18s ease-out}
+    @keyframes pop{from{transform:translateY(-8px);opacity:0}to{transform:none;opacity:1}}
+    .close{border:none;background:transparent;font-size:20px;cursor:pointer;color:#555}
+
+    .search-overlay{position:fixed;inset:0;display:none;place-items:start center;z-index:60;background:rgba(22,24,30,.45);backdrop-filter:blur(2px);padding-top:60px}
+    .search-overlay.show{display:grid}
+    .search-panel{width:min(760px,92vw);background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:12px}
+    .search-input-wrap{display:flex;gap:8px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fafbff}
+    .search-input-wrap input{flex:1;font-size:16px;border:none;outline:none;background:transparent}
+    .search-results{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:8px;max-height:50vh;overflow:auto}
+    .search-item{display:grid;grid-template-columns:40px 1fr auto;gap:12px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff}
   </style>
 </head>
 <body>
   <div class="app">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="brand">
+    <!-- Drawer for mobile -->
+    <aside id="drawer" class="drawer" aria-hidden="true">
+      <div class="brand" style="margin-bottom:8px">
         <div class="brand-badge">C</div>
-        <div class="brand-text">
+        <div>
           <p class="welcome">Welcome,</p>
           <p class="name">CRAFTUI</p>
         </div>
       </div>
-
       <nav class="side-nav">
-        <button class="nav-item active" aria-current="page" title="Dashboard">
-          <span class="icon" aria-hidden="true">
-            <!-- Home SVG Icon -->
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="22" height="22">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M13 5v6h6m-6 0v6m0 0H7m6 0h6" />
-            </svg>
-          </span>
-          <span>Dashboard</span>
-        </button>
-        <button class="nav-item" title="Contacts">
-          <span class="icon" aria-hidden="true">
-            <!-- User SVG Icon -->
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="22" height="22">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A9 9 0 1118.88 6.196 9 9 0 015.12 17.804z" />
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-          </span>
-          <span>Contacts</span>
-        </button>
-        <button class="nav-item" title="Products">
-          <span class="icon" aria-hidden="true">
-            <!-- Box SVG Icon -->
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="22" height="22">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0v10a2 2 0 01-2 2H6a2 2 0 01-2-2V7m16 0l-8 4-8-4" />
-            </svg>
-          </span>
-          <span>Products</span>
-        </button>
-        <button class="nav-item" title="Analytics">
-          <span class="icon" aria-hidden="true">
-            <!-- Chart Bar SVG Icon -->
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="22" height="22">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3v18h18" />
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6m4 6v-10m4 10v-4" />
-            </svg>
-          </span>
-          <span>Analytics</span>
-        </button>
-        <button class="nav-item" title="Invoices">
-          <span class="icon" aria-hidden="true">
-            <!-- Receipt SVG Icon -->
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="22" height="22">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2h6v2m-6-4h6m-6-4h6M4 6h16v12H4z" />
-            </svg>
-          </span>
-          <span>Invoices</span>
-        </button>
-        <button class="nav-item" title="Settings">
-          <span class="icon" aria-hidden="true">
-            <!-- Cog SVG Icon -->
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="22" height="22">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          </span>
-          <span>Settings</span>
-        </button>
+        <button class="nav-item active"><span>🏠</span><span>Dashboard</span></button>
+        <button class="nav-item"><span>👤</span><span>Contacts</span></button>
+        <button class="nav-item"><span>📦</span><span>Products</span></button>
+        <button class="nav-item"><span>📊</span><span>Analytics</span></button>
+        <button class="nav-item"><span>🧾</span><span>Invoices</span></button>
+        <button class="nav-item"><span>⚙️</span><span>Settings</span></button>
+      </nav>
+
+      <section class="messages" style="margin-top:16px">
+        <h4>Messages</h4>
+        <ul class="message-list">
+          <li class="message"><img src="https://i.pravatar.cc/36?u=user1" alt=""><div><p class="msg-name">Wade Warren</p><p class="msg-text">Thanks for the help!</p></div></li>
+          <li class="message"><img src="https://i.pravatar.cc/36?u=user2" alt=""><div><p class="msg-name">Leslie Alexander</p><p class="msg-text">Meeting tomorrow at 10 AM</p></div></li>
+        </ul>
+      </section>
+    </aside>
+    <div id="drawerBackdrop" class="drawer-backdrop" aria-hidden="true"></div>
+
+    <!-- Sidebar for tablet/desktop -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-badge">C</div>
+        <div>
+          <p class="welcome">Welcome,</p>
+          <p class="name">CRAFTUI</p>
+        </div>
+      </div>
+      <nav class="side-nav">
+        <button class="nav-item active"><span>🏠</span><span>Dashboard</span></button>
+        <button class="nav-item"><span>👤</span><span>Contacts</span></button>
+        <button class="nav-item"><span>📦</span><span>Products</span></button>
+        <button class="nav-item"><span>📊</span><span>Analytics</span></button>
+        <button class="nav-item"><span>🧾</span><span>Invoices</span></button>
+        <button class="nav-item"><span>⚙️</span><span>Settings</span></button>
       </nav>
 
       <section class="messages">
         <h4>Messages</h4>
         <ul class="message-list">
-          <li class="message">
-            <img src="https://i.pravatar.cc/36?u=user1" alt="avatar" />
-            <div>
-              <p class="msg-name">Wade Warren</p>
-              <p class="msg-text">Thanks for the help!</p>
-            </div>
-          </li>
-          <li class="message">
-            <img src="https://i.pravatar.cc/36?u=user2" alt="avatar" />
-            <div>
-              <p class="msg-name">Leslie Alexander</p>
-              <p class="msg-text">Meeting tomorrow at 10 AM</p>
-            </div>
-          </li>
-          <li class="message">
-            <img src="https://i.pravatar.cc/36?u=user3" alt="avatar" />
-            <div>
-              <p class="msg-name">Jenny Wilson</p>
-              <p class="msg-text">Can you send me the files?</p>
-            </div>
-          </li>
+          <li class="message"><img src="https://i.pravatar.cc/36?u=user1" alt=""><div><p class="msg-name">Wade Warren</p><p class="msg-text">Thanks for the help!</p></div></li>
+          <li class="message"><img src="https://i.pravatar.cc/36?u=user2" alt=""><div><p class="msg-name">Leslie Alexander</p><p class="msg-text">Meeting tomorrow at 10 AM</p></div></li>
+          <li class="message"><img src="https://i.pravatar.cc/36?u=user3" alt=""><div><p class="msg-name">Jenny Wilson</p><p class="msg-text">Can you send me the files?</p></div></li>
         </ul>
       </section>
 
       <section class="conversion">
-        <div class="conversion-header">
-          <h4>Conversion history</h4>
-          <button class="icon-btn" aria-label="More">
-            ⓘ
-          </button>
-        </div>
+        <h4>Conversion history</h4>
         <p class="muted">Week to week performance</p>
-        <div class="area-chart">
-          <div class="wave"></div>
-        </div>
+        <div class="area-chart"><div class="wave"></div></div>
       </section>
     </aside>
 
@@ -893,49 +202,17 @@
       <header class="topbar">
         <h1>Dashboard</h1>
         <div class="actions">
-          <button class="icon-btn only-mobile" id="openMenu" aria-label="Menu">☰</button>
+          <button class="icon-btn" id="openMenu" aria-label="Menu">☰</button>
           <button class="icon-btn" id="openSearch" aria-label="Search">🔍</button>
           <button class="icon-btn" id="openAdd" aria-label="Add">+</button>
         </div>
       </header>
 
       <section class="stats">
-        <div class="card">
-          <div class="card-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-            </svg>
-          </div>
-          <p class="value">1,345</p>
-          <p class="label">New sales</p>
-        </div>
-        <div class="card">
-          <div class="card-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>
-          </div>
-          <p class="value">2,890</p>
-          <p class="label">New leads</p>
-        </div>
-        <div class="card">
-          <div class="card-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-            </svg>
-          </div>
-          <p class="value">$1,870</p>
-          <p class="label">Income per lead</p>
-        </div>
-        <div class="card">
-          <div class="card-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-            </svg>
-          </div>
-          <p class="value">5.10%</p>
-          <p class="label">Conversion rate</p>
-        </div>
+        <div class="card"><div class="card-icon">💰</div><p class="value">1,345</p><p class="label">New sales</p></div>
+        <div class="card"><div class="card-icon">👥</div><p class="value">2,890</p><p class="label">New leads</p></div>
+        <div class="card"><div class="card-icon">📈</div><p class="value">$1,870</p><p class="label">Income per lead</p></div>
+        <div class="card"><div class="card-icon">⚡</div><p class="value">5.10%</p><p class="label">Conversion rate</p></div>
       </section>
 
       <section class="latest">
@@ -949,231 +226,46 @@
           </div>
         </div>
 
+        <!-- Desktop table -->
         <div class="table">
           <div class="thead">
-            <div>Product</div>
-            <div>Customer</div>
-            <div>Delivery</div>
-            <div>Subtotal</div>
-            <div>Shipping</div>
-            <div>Total</div>
+            <div>Product</div><div>Customer</div><div>Delivery</div><div>Subtotal</div><div>Shipping</div><div>Total</div>
           </div>
-
-          <!-- rows -->
           <div class="row">
-            <div class="cell product">
-              <img src="https://dummyimage.com/56x56/eee/aaa&text=MBP" alt="Macbook Pro"/>
-              <div>
-                <p class="p-title">Macbook Pro</p>
-                <p class="p-sub">ID 10-3290-08</p>
-              </div>
-            </div>
-            <div class="cell">
-              <p class="c-name">Rodney Cannon</p>
-              <p class="c-email">rodney.cannon@gmail.com</p>
-            </div>
-            <div class="cell">
-              <p class="addr">United Kingdom</p>
-              <p class="addr-sub">193 Cole Plains Suite 649, 891203</p>
-            </div>
-            <div class="cell">$100.00</div>
-            <div class="cell">$18.00</div>
-            <div class="cell">$118.00</div>
+            <div class="cell product"><img src="https://dummyimage.com/56x56/eee/aaa&text=MBP" alt=""><div><p class="p-title">Macbook Pro</p><p class="p-sub">ID 10-3290-08</p></div></div>
+            <div class="cell"><p class="c-name">Rodney Cannon</p><p class="c-email">rodney.cannon@gmail.com</p></div>
+            <div class="cell"><p class="addr">United Kingdom</p><p class="addr-sub">193 Cole Plains Suite 649, 891203</p></div>
+            <div class="cell">$100.00</div><div class="cell">$18.00</div><div class="cell">$118.00</div>
             <div class="status shipped">Shipped</div>
           </div>
-
           <div class="row">
-            <div class="cell product">
-              <img src="https://dummyimage.com/56x56/eee/aaa&text=Dell" alt="Dell Laptop"/>
-              <div>
-                <p class="p-title">Dell Laptop</p>
-                <p class="p-sub">ID 10-3456-18</p>
-              </div>
-            </div>
-            <div class="cell">
-              <p class="c-name">Mike Franklin</p>
-              <p class="c-email">mike.franklin@gmail.com</p>
-            </div>
-            <div class="cell">
-              <p class="addr">United States</p>
-              <p class="addr-sub">619 Jeffrey Freeway Apt. 273</p>
-            </div>
-            <div class="cell">$180.00</div>
-            <div class="cell">$28.00</div>
-            <div class="cell">$208.00</div>
+            <div class="cell product"><img src="https://dummyimage.com/56x56/eee/aaa&text=Dell" alt=""><div><p class="p-title">Dell Laptop</p><p class="p-sub">ID 10-3456-18</p></div></div>
+            <div class="cell"><p class="c-name">Mike Franklin</p><p class="c-email">mike.franklin@gmail.com</p></div>
+            <div class="cell"><p class="addr">United States</p><p class="addr-sub">619 Jeffrey Freeway Apt. 273</p></div>
+            <div class="cell">$180.00</div><div class="cell">$28.00</div><div class="cell">$208.00</div>
             <div class="status processing">Processing</div>
-          </div>
-
-          <div class="row">
-            <div class="cell product">
-              <img src="https://dummyimage.com/56x56/eee/aaa&text=Air" alt="Macbook Air"/>
-              <div>
-                <p class="p-title">Macbook Air</p>
-                <p class="p-sub">ID 10-3786-23</p>
-              </div>
-            </div>
-            <div class="cell">
-              <p class="c-name">Louis Franklin</p>
-              <p class="c-email">louis.franklin@gmail.com</p>
-            </div>
-            <div class="cell">
-              <p class="addr">Germany</p>
-              <p class="addr-sub">200 Davis Estates Suite 621</p>
-            </div>
-            <div class="cell">$100.00</div>
-            <div class="cell">$18.00</div>
-            <div class="cell">$118.00</div>
-            <div class="status processing">Processing</div>
-          </div>
-
-          <div class="row">
-            <div class="cell product">
-              <img src="https://dummyimage.com/56x56/eee/aaa&text=MB" alt="Macbook"/>
-              <div>
-                <p class="p-title">Macbook</p>
-                <p class="p-sub">ID 10-4570-15</p>
-              </div>
-            </div>
-            <div class="cell">
-              <p class="c-name">Dominic Love</p>
-              <p class="c-email">dominic.love@gmail.com</p>
-            </div>
-            <div class="cell">
-              <p class="addr">Spain</p>
-              <p class="addr-sub">742 Rau Summit Suite 407</p>
-            </div>
-            <div class="cell">$560.00</div>
-            <div class="cell">$18.00</div>
-            <div class="cell">$578.00</div>
-            <div class="status shipped">Shipped</div>
-          </div>
-
-          <div class="row">
-            <div class="cell product">
-              <img src="https://dummyimage.com/56x56/eee/aaa&text=LG" alt="LG Laptop"/>
-              <div>
-                <p class="p-title">LG Laptop</p>
-                <p class="p-sub">ID 10-5468-19</p>
-              </div>
-            </div>
-            <div class="cell">
-              <p class="c-name">Adrian Drake</p>
-              <p class="c-email">adrian.drake@gmail.com</p>
-            </div>
-            <div class="cell">
-              <p class="addr">United Kingdom</p>
-              <p class="addr-sub">166 Corkery Vista Apt. 293</p>
-            </div>
-            <div class="cell">$340.00</div>
-            <div class="cell">$34.00</div>
-            <div class="cell">$374.00</div>
-            <div class="status cancelled">Cancelled</div>
-          </div>
-
-          <div class="row">
-            <div class="cell product">
-              <img src="https://dummyimage.com/56x56/eee/aaa&text=MBP" alt="Macbook Pro"/>
-              <div>
-                <p class="p-title">Macbook Pro</p>
-                <p class="p-sub">ID 10-4890-14</p>
-              </div>
-            </div>
-            <div class="cell">
-              <p class="c-name">Walter Quinn</p>
-              <p class="c-email">walter.quinn@gmail.com</p>
-            </div>
-            <div class="cell">
-              <p class="addr">United States</p>
-              <p class="addr-sub">7613 Wilfredo Rapids Apt. 715</p>
-            </div>
-            <div class="cell">$180.00</div>
-            <div class="cell">$40.00</div>
-            <div class="cell">$220.00</div>
-            <div class="status shipped">Shipped</div>
-          </div>
-
-          <div class="row">
-            <div class="cell product">
-              <img src="https://dummyimage.com/56x56/eee/aaa&text=MBP" alt="Macbook Pro"/>
-              <div>
-                <p class="p-title">Macbook Pro</p>
-                <p class="p-sub">ID 10-3290-08</p>
-              </div>
-            </div>
-            <div class="cell">
-              <p class="c-name">Victor Roberson</p>
-              <p class="c-email">victor.roberson@gmail.com</p>
-            </div>
-            <div class="cell">
-              <p class="addr">Germany</p>
-              <p class="addr-sub">357 Hoeger Bypass Apt. 593</p>
-            </div>
-            <div class="cell">$680.00</div>
-            <div class="cell">$18.00</div>
-            <div class="cell">$698.00</div>
-            <div class="status shipped">Shipped</div>
           </div>
         </div>
 
+        <!-- Mobile list -->
         <ul class="list-mobile">
-          <li class="li">
-            <img src="https://dummyimage.com/48x48/eee/aaa&text=MBP" alt="Macbook Pro"/>
-            <div>
-              <p class="li-title">Macbook Pro</p>
-              <p class="li-sub">Rodney Cannon</p>
-            </div>
-            <p class="li-price">$118.00</p>
-          </li>
-          <li class="li">
-            <img src="https://dummyimage.com/48x48/eee/aaa&text=Dell" alt="Dell Laptop"/>
-            <div>
-              <p class="li-title">Dell Laptop</p>
-              <p class="li-sub">Mike Franklin</p>
-            </div>
-            <p class="li-price">$208.00</p>
-          </li>
-          <li class="li">
-            <img src="https://dummyimage.com/48x48/eee/aaa&text=Air" alt="Macbook Air"/>
-            <div>
-              <p class="li-title">Macbook Air</p>
-              <p class="li-sub">Louis Franklin</p>
-            </div>
-            <p class="li-price">$118.00</p>
-          </li>
-          <li class="li">
-            <img src="https://dummyimage.com/48x48/eee/aaa&text=MB" alt="Macbook"/>
-            <div>
-              <p class="li-title">Macbook</p>
-              <p class="li-sub">Dominic Love</p>
-            </div>
-            <p class="li-price">$578.00</p>
-          </li>
-          <li class="li">
-            <img src="https://dummyimage.com/48x48/eee/aaa&text=LG" alt="LG Laptop"/>
-            <div>
-              <p class="li-title">LG Laptop</p>
-              <p class="li-sub">Adrian Drake</p>
-            </div>
-            <p class="li-price">$374.00</p>
-          </li>
+          <li class="li"><img src="https://dummyimage.com/48x48/eee/aaa&text=MBP" alt=""><div><p class="li-title">Macbook Pro</p><p class="li-sub">Rodney Cannon</p></div><p class="li-price">$118.00</p></li>
+          <li class="li"><img src="https://dummyimage.com/48x48/eee/aaa&text=Dell" alt=""><div><p class="li-title">Dell Laptop</p><p class="li-sub">Mike Franklin</p></div><p class="li-price">$208.00</p></li>
+          <li class="li"><img src="https://dummyimage.com/48x48/eee/aaa&text=Air" alt=""><div><p class="li-title">Macbook Air</p><p class="li-sub">Louis Franklin</p></div><p class="li-price">$118.00</p></li>
         </ul>
 
         <div class="pager">
           <button class="seg-btn">Prev</button>
-          <div class="pages">
-            <button class="seg-btn">1</button>
-            <button class="seg-btn active">2</button>
-            <button class="seg-btn">3</button>
-            <button class="seg-btn">4</button>
-            <button class="seg-btn">5</button>
+          <div class="pages" style="display:flex;gap:6px;flex-wrap:wrap">
+            <button class="seg-btn">1</button><button class="seg-btn active">2</button><button class="seg-btn">3</button><button class="seg-btn">4</button><button class="seg-btn">5</button>
           </div>
           <button class="seg-btn">Next</button>
         </div>
       </section>
     </main>
 
-    <!-- Bottom navigation (mobile) -->
-    <nav class="bottom-nav">
+    <!-- Bottom navigation -->
+    <nav class="bottom-nav" aria-label="Bottom">
       <button class="bn-item active" aria-current="page" title="Dashboard">🏠</button>
       <button class="bn-item" title="Contacts">👤</button>
       <button class="bn-item" title="Products">📦</button>
@@ -1183,17 +275,15 @@
     </nav>
   </div>
 
-  <!-- Add quick actions -->
+  <!-- Add modal -->
   <div class="modal" id="addModal" aria-hidden="true" role="dialog" aria-modal="true">
     <div class="modal-sheet" role="document">
       <button class="close" id="closeAdd" aria-label="Close">✕</button>
-      <ul class="quick-list">
-        <li><button class="quick"><span>📁</span><div><p class="q-title">New Project</p><p class="q-sub">Create project space</p></div></button></li>
-        <li><button class="quick"><span>📝</span><div><p class="q-title">New Task</p><p class="q-sub">Assign and track</p></div></button></li>
-        <li><button class="quick"><span>👤</span><div><p class="q-title">New Contact</p><p class="q-sub">Save customer</p></div></button></li>
-        <li><button class="quick"><span>📅</span><div><p class="q-title">New Event</p><p class="q-sub">Schedule meeting</p></div></button></li>
-        <li><button class="quick"><span>📦</span><div><p class="q-title">New Product</p><p class="q-sub">Add catalog item</p></div></button></li>
-        <li><button class="quick"><span>🧾</span><div><p class="q-title">New Invoice</p><p class="q-sub">Bill a client</p></div></button></li>
+      <ul class="message-list" style="gap:8px;margin-top:8px">
+        <li><button class="nav-item" style="width:100%"><span>📁</span><span>New Project</span></button></li>
+        <li><button class="nav-item" style="width:100%"><span>📝</span><span>New Task</span></button></li>
+        <li><button class="nav-item" style="width:100%"><span>👤</span><span>New Contact</span></button></li>
+        <li><button class="nav-item" style="width:100%"><span>📅</span><span>New Event</span></button></li>
       </ul>
     </div>
   </div>
@@ -1202,95 +292,69 @@
   <div class="search-overlay" id="searchOverlay" aria-hidden="true">
     <div class="search-panel">
       <div class="search-input-wrap">
-        <input id="searchInput" type="text" placeholder="Search…" autocomplete="off" />
+        <input id="searchInput" type="text" placeholder="Search…" autocomplete="off"/>
         <button class="close" id="closeSearch" aria-label="Close">✕</button>
       </div>
-      <ul class="search-results" id="searchResults">
-        <!-- results injected by JS -->
-      </ul>
+      <ul class="search-results" id="searchResults"></ul>
     </div>
   </div>
 
   <script>
-    // Add modal logic
+    // Drawer (mobile)
+    const drawer = document.getElementById('drawer');
+    const drawerBackdrop = document.getElementById('drawerBackdrop');
+    const btnMenu = document.getElementById('openMenu');
+    const openDrawer = ()=>{ drawer.classList.add('show'); drawer.setAttribute('aria-hidden','false'); drawerBackdrop.style.display='block'; document.body.style.overflow='hidden'; };
+    const closeDrawer = ()=>{ drawer.classList.remove('show'); drawer.setAttribute('aria-hidden','true'); drawerBackdrop.style.display='none'; document.body.style.overflow=''; };
+    btnMenu.addEventListener('click', openDrawer);
+    drawerBackdrop.addEventListener('click', closeDrawer);
+    window.addEventListener('keydown', e=>{ if(e.key==='Escape' && drawer.classList.contains('show')) closeDrawer(); });
+
+    // Add modal
     const openAdd = document.getElementById('openAdd');
     const openAddMobile = document.getElementById('openAddMobile');
     const addModal = document.getElementById('addModal');
     const closeAdd = document.getElementById('closeAdd');
-
-    function openAddModal() {
-      addModal.classList.add('show');
-      addModal.setAttribute('aria-hidden','false');
-    }
-    function closeAddModal() {
-      addModal.classList.remove('show');
-      addModal.setAttribute('aria-hidden','true');
-    }
+    const openAddModal = ()=>{ addModal.classList.add('show'); addModal.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; };
+    const closeAddModal = ()=>{ addModal.classList.remove('show'); addModal.setAttribute('aria-hidden','true'); document.body.style.overflow=''; };
     openAdd.addEventListener('click', openAddModal);
     openAddMobile.addEventListener('click', openAddModal);
     closeAdd.addEventListener('click', closeAddModal);
-    addModal.addEventListener('click', (e) => {
-      if (e.target === addModal) closeAddModal();
-    });
+    addModal.addEventListener('click', e=>{ if(e.target===addModal) closeAddModal(); });
+    window.addEventListener('keydown', e=>{ if(e.key==='Escape' && addModal.classList.contains('show')) closeAddModal(); });
 
-    // Search overlay logic
+    // Search overlay
     const openSearch = document.getElementById('openSearch');
     const searchOverlay = document.getElementById('searchOverlay');
     const closeSearch = document.getElementById('closeSearch');
     const searchInput = document.getElementById('searchInput');
     const searchResults = document.getElementById('searchResults');
-
     const data = [
-      { type: 'Project', title: 'Dribbble Redesign', date: '24 Feb 2019', tag: 'Webdesign', user: 'Bradley Wilkins', email: 'b.wilkins@gmail.com', role: 'Designer' },
-      { type: 'Theme', title: 'New HTML Theme', date: '20 May 2019', tag: 'Theme', user: 'Bradley Wilkins', email: 'b.wilkins@gmail.com', role: 'Designer' },
-      { type: 'Person', title: 'Bradley Wilkins', date: '', tag: 'Designer', user: 'Bradley Wilkins', email: 'b.wilkins@gmail.com', role: 'Designer' },
+      { title:'Dribbble Redesign', tag:'Webdesign', user:'Bradley Wilkins', email:'b.wilkins@gmail.com', date:'24 Feb 2019', role:'Designer' },
+      { title:'New HTML Theme', tag:'Theme', user:'Bradley Wilkins', email:'b.wilkins@gmail.com', date:'20 May 2019', role:'Designer' },
+      { title:'Bradley Wilkins', tag:'Designer', user:'Bradley Wilkins', email:'b.wilkins@gmail.com', date:'', role:'Designer' },
     ];
-
-    function openSearchOverlay() {
-      searchOverlay.classList.add('show');
-      searchOverlay.setAttribute('aria-hidden','false');
-      searchInput.focus();
-      renderResults('');
-    }
-    function closeSearchOverlay() {
-      searchOverlay.classList.remove('show');
-      searchOverlay.setAttribute('aria-hidden','true');
-      searchInput.value = '';
-      searchResults.innerHTML = '';
-    }
+    const openSearchOverlay = ()=>{ searchOverlay.classList.add('show'); searchOverlay.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; searchInput.focus(); renderResults(''); };
+    const closeSearchOverlay = ()=>{ searchOverlay.classList.remove('show'); searchOverlay.setAttribute('aria-hidden','true'); document.body.style.overflow=''; searchInput.value=''; searchResults.innerHTML=''; };
     openSearch.addEventListener('click', openSearchOverlay);
     closeSearch.addEventListener('click', closeSearchOverlay);
-    searchOverlay.addEventListener('click', (e) => {
-      if (e.target === searchOverlay) closeSearchOverlay();
-    });
+    searchOverlay.addEventListener('click', e=>{ if(e.target===searchOverlay) closeSearchOverlay(); });
+    window.addEventListener('keydown', e=>{ if(e.key==='Escape' && searchOverlay.classList.contains('show')) closeSearchOverlay(); });
 
-    function renderResults(query) {
-      const q = query.trim().toLowerCase();
-      const items = data.filter(d =>
-        d.title.toLowerCase().includes(q) ||
-        d.user.toLowerCase().includes(q) ||
-        d.tag.toLowerCase().includes(q)
-      );
+    function renderResults(q){
+      const query = q.trim().toLowerCase();
+      const items = data.filter(d => d.title.toLowerCase().includes(query) || d.user.toLowerCase().includes(query) || d.tag.toLowerCase().includes(query));
       searchResults.innerHTML = items.map(item => `
         <li class="search-item">
-          <img src="https://i.pravatar.cc/40?u=${encodeURIComponent(item.user)}" alt="avatar"/>
-          <div class="s-main">
-            <p class="s-title">${item.title} <span class="s-tag">${item.tag}</span></p>
-            <p class="s-sub">${item.user} • ${item.email} ${item.date ? '• ' + item.date : ''}</p>
+          <img src="https://i.pravatar.cc/40?u=${encodeURIComponent(item.user)}" alt="">
+          <div>
+            <p class="s-title" style="margin:0;font-weight:600">${item.title} <span class="s-tag">${item.tag}</span></p>
+            <p class="s-sub">${item.user} • ${item.email} ${item.date ? '• '+item.date : ''}</p>
           </div>
           <span class="s-role">${item.role}</span>
-        </li>
-      `).join('');
+        </li>`).join('');
     }
-    searchInput.addEventListener('input', (e) => renderResults(e.target.value));
-
-    // Escape to close overlays
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        if (addModal.classList.contains('show')) closeAddModal();
-        if (searchOverlay.classList.contains('show')) closeSearchOverlay();
-      }
-    });
+    searchInput.addEventListener('input', e => renderResults(e.target.value));
   </script>
 </body>
 </html>

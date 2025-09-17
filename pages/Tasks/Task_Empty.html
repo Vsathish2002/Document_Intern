@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Tasks — Empty State</title>
-    <link rel="stylesheet" href="../../assets/css/output.css">
+  <link rel="stylesheet" href="../../assets/css/output.css">
   <script>
     tailwind.config = {
       theme: {
@@ -22,13 +22,20 @@
       }
     }
   </script>
-  <style> body{font-family: ui-sans-serif, system-ui, -apple-system, "Inter", Segoe UI, Roboto, Arial} </style>
+  <style>
+    body{font-family: ui-sans-serif, system-ui, -apple-system, "Inter", Segoe UI, Roboto, Arial}
+  </style>
 </head>
 <body class="bg-[#f7f7fb]">
   <!-- Page shell -->
   <div class="min-h-dvh flex">
-    <!-- Sidebar (desktop) -->
-    <aside class="hidden lg:flex w-[320px] shrink-0 flex-col gap-4 p-4">
+
+    <!-- Sidebar (desktop lg+) -->
+    <aside id="sidebar"
+      class="hidden lg:flex w-[320px] shrink-0 flex-col gap-4 p-4 transition-[transform,opacity] duration-200 will-change-transform
+             lg:data-[hidden=true]:-translate-x-full lg:data-[hidden=true]:opacity-0"
+      data-hidden="false">
+
       <!-- Company card -->
       <div class="bg-white border border-line rounded-2xl shadow-soft p-4 flex items-center justify-between">
         <div class="flex items-center gap-3">
@@ -124,7 +131,8 @@
       <!-- Top bar -->
       <header class="h-16 bg-white border-b border-line flex items-center px-4 lg:px-6 justify-between">
         <div class="flex items-center gap-3">
-          <button class="lg:hidden w-10 h-10 grid place-items-center rounded-lg border border-line">☰</button>
+          <!-- Chevron toggles the sidebar on lg+ -->
+          <button id="toggleChevron" class="w-10 h-10 grid place-items-center rounded-lg border border-line">‹</button>
           <h1 class="font-semibold">Tasks</h1>
         </div>
         <div class="flex items-center gap-2">
@@ -136,7 +144,7 @@
       <!-- Empty state center -->
       <main class="flex-1 grid place-items-center p-4">
         <div class="max-w-[720px] w-full text-center">
-          <!-- Illustration (inline SVG matching style) -->
+          <!-- Illustration -->
           <div class="mx-auto max-w-[520px]">
             <svg viewBox="0 0 640 360" class="w-full h-auto">
               <ellipse cx="320" cy="300" rx="180" ry="24" fill="#2f2e41" opacity=".2"/>
@@ -146,7 +154,6 @@
               <rect x="225" y="238" width="50" height="46" rx="4" fill="#2f2e41"/>
               <rect x="365" y="238" width="50" height="46" rx="4" fill="#2f2e41"/>
               <circle cx="322" cy="170" r="6" fill="#6C63FF"/>
-              <!-- Person -->
               <circle cx="320" cy="150" r="22" fill="#ccc"/>
               <rect x="300" y="170" width="40" height="70" rx="10" fill="#cfd2e6"/>
               <rect x="292" y="232" width="56" height="50" rx="10" fill="#6C63FF"/>
@@ -165,7 +172,7 @@
         </div>
       </main>
 
-      <!-- Mobile bottom dock (optional; matches the family of screens) -->
+      <!-- Mobile bottom dock -->
       <nav class="lg:hidden fixed bottom-0 inset-x-0 h-16 bg-white border-t border-line z-40">
         <div class="h-full px-3 flex items-center justify-between">
           <button class="w-11 h-11 rounded-xl border border-line grid place-items-center">🏠</button>
@@ -177,5 +184,33 @@
       </nav>
     </div>
   </div>
+
+  <script>
+    // Toggle sidebar on lg+ using a data attribute directly on the aside
+    const sidebar = document.getElementById('sidebar');
+    const btn = document.getElementById('toggleChevron');
+
+    function setCollapsed(isHidden){
+      sidebar.dataset.hidden = String(isHidden);
+      btn.textContent = isHidden ? '›' : '‹';
+    }
+
+    // Initial visible on desktop, hidden on mobile (sidebar is lg-only)
+    setCollapsed(false);
+
+    btn.addEventListener('click', ()=>{
+      // Only act on lg+ where sidebar exists
+      if (window.matchMedia('(min-width:1024px)').matches) {
+        const isHidden = sidebar.dataset.hidden === 'true';
+        setCollapsed(!isHidden);
+      }
+    });
+
+    // If viewport shrinks below lg, ensure collapsed state
+    const mq = window.matchMedia('(min-width: 1024px)');
+    mq.addEventListener('change', (e)=>{
+      if (!e.matches) setCollapsed(true);
+    });
+  </script>
 </body>
 </html>

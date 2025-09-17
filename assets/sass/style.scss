@@ -1,0 +1,40 @@
+// Variables
+$btn-bg: #ff6a00;
+$btn-color: white;
+$btn-padding: 0.75rem 1.5rem;
+$btn-radius: 0.5rem;
+$btn-hover-bg: #ee0979;
+$btn-shadow: 0 4px 6px rgba(0,0,0,0.1);
+
+@mixin button-component($bg, $color, $padding, $radius, $hover-bg) {
+  background: $bg;
+  color: $color;
+  padding: $padding;
+  border-radius: $radius;
+  box-shadow: $btn-shadow;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: $hover-bg;
+  }
+}
+
+
+.btn-primary {
+  @include button-component($btn-bg, $btn-color, $btn-padding, $btn-radius, $btn-hover-bg);
+}
+
+.btn-secondary {
+  @include button-component(#3498db, white, $btn-padding, $btn-radius, #1d6fbf);
+}
+  
+.btn-third {
+  @include button-component(green, white, $btn-padding, $btn-radius, #1d6fbf);
+}
+  
+.btn-fourth {
+  @include button-component(red, white, $btn-padding, $btn-radius, #1d6fbf);
+}
+  

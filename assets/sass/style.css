@@ -1,0 +1,57 @@
+.btn-primary {
+  background: #ff6a00;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.btn-primary:hover {
+  background: #ee0979;
+}
+
+.btn-secondary {
+  background: #3498db;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.btn-secondary:hover {
+  background: #1d6fbf;
+}
+
+.btn-third {
+  background: green;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.btn-third:hover {
+  background: #1d6fbf;
+}
+
+.btn-fourth {
+  background: red;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.btn-fourth:hover {
+  background: #1d6fbf;
+}
+
+/*# sourceMappingURL=style.css.map */
